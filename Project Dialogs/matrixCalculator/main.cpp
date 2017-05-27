@@ -149,14 +149,90 @@ BOOL CALLBACK MatrixDlgProc(HWND _hwnd,
 			_value = ReadFromEditBox(_hwnd, IDC_EDIT_A11);
 			break;
 		}
+		//Add A and B
+		case IDOK:
+		{
+			s_matrixCalculator.AddMatrices(_hwnd);
+			break;
+		}
+		//Multiply AB
+		case IDOK2:
+		{
+			s_matrixCalculator.MultiplyAB(_hwnd);
+			break;
+		}
+		//Subtract B from A
+		case IDCANCEL:
+		{
+			s_matrixCalculator.SubtractMatrices(_hwnd);
+			break;
+		}
+		//Inverse A
+		case IDCANCEL2:
+		{
+			s_matrixCalculator.InverseofA(_hwnd);
+			break;
+		}
+		//Inverse B
+		case IDCANCEL3:
+		{
+			s_matrixCalculator.InverseofB(_hwnd);
+			break;
+		}
+		//Determinant of A
+		case IDOK3:
+		{
+			s_matrixCalculator.DeterminantofA(_hwnd);
+			break;
+		}
+		
+		//Set A to Identity
 		case IDOK4:
 		{
 			s_matrixCalculator.HandleSetAtoI(_hwnd);
 			break;
 		}
+		//Multiply BA
+		case IDOK5:
+		{
+			s_matrixCalculator.MultiplyBA(_hwnd);
+			break;
+		}
+		//Multiply A by Scalar
+		case IDOK6:
+		{
+			s_matrixCalculator.ScalarMultiplyA(_hwnd, ReadFromEditBox(_hwnd, IDC_EDIT_AScaled));
+			break;
+		}
+		//Determinant of B
+		case IDOK7:
+		{
+			s_matrixCalculator.DeterminantofB(_hwnd);
+			break;
+		}
+		//Set B to Identity
 		case IDOK8:
 		{
 			s_matrixCalculator.HandleSetBtoI(_hwnd);
+			break;
+		}
+
+		//transpose A
+		case IDOK9:
+		{
+			s_matrixCalculator.TransposeA(_hwnd);
+			break;
+		}
+		//Multiply B by Scalar
+		case IDOK10:
+		{
+			s_matrixCalculator.ScalarMultiplyB(_hwnd, ReadFromEditBox(_hwnd, IDC_EDIT_BScaled));
+			break;
+		}
+		//transpose B
+		case IDOK11:
+		{
+			s_matrixCalculator.TransposeB(_hwnd);
 			break;
 		}
 		default:

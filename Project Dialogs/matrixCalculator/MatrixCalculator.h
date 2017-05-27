@@ -18,7 +18,6 @@
 #define __MATRIXCALCULATOR_H__
 
 #include <Windows.h>
-#include <vector>
 
 class CMatrixCalculator
 {
@@ -29,14 +28,35 @@ public:
 	void HandleSetAtoI(HWND _hDlg);
 	void HandleSetBtoI(HWND _hDlg);
 
+	void DeterminantofA(HWND _hDlg);
+	void DeterminantofB(HWND _hDlg);
+
+	void InverseofA(HWND _hDlg);
+	void InverseofB(HWND _hDlg);
+
+	void TransposeA(HWND _hDlg);
+	void TransposeB(HWND _hDlg);
+
+	void ScalarMultiplyA(HWND _hDlg, float _fScalar);
+	void ScalarMultiplyB(HWND _hDlg, float _fScalar);
+
+	void AddMatrices(HWND _hDlg);
+	void SubtractMatrices(HWND _hDlg);
+
+	void MultiplyAB(HWND _hDlg);
+	void MultiplyBA(HWND _hDlg);
+
 private:
 	void SetMatrixBoxA(HWND _hDlg, float _fValue, size_t _szRows, size_t _szColumns);
 	void SetMatrixBoxB(HWND _hDlg, float _fValue, size_t _szRows, size_t _szColumns);
+	void SetMatrixBoxR(HWND _hDlg, float _fValue, size_t _szRows, size_t _szColumns);
 	size_t GetMatrixBoxA(size_t _szRows, size_t _szColumns);
 	size_t GetMatrixBoxB(size_t _szRows, size_t _szColumns);
-	std::vector<size_t> m_vecMatrixABoxes;
-	std::vector<size_t> m_vecMatrixBBoxes;
+	size_t GetMatrixBoxR(size_t _szRows, size_t _szColumns);
 
+	size_t m_aMatrixABoxes[4][4];
+	size_t m_aMatrixBBoxes[4][4];
+	size_t m_aMatrixRBoxes[4][4];
 };
 
 #endif  //__MATRIXCALCULATOR_H__
