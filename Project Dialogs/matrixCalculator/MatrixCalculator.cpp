@@ -14,6 +14,7 @@
 #include "MatrixCalculator.h"
 #include "utils.h"
 #include "resource.h"
+#include "Matrix.h"
 
 CMatrixCalculator::CMatrixCalculator()
 {
@@ -137,13 +138,72 @@ void CMatrixCalculator::HandleSetBtoI(HWND _hDlg) {
 
 void CMatrixCalculator::DeterminantofA(HWND _hDlg) 
 {
-	//need code to determine the transpose of a 4x4 matrix
-	//float _fDeterminant = ((GetMatrixBoxA(0, 0) * ((GetMatrixBoxA(1, 1) * GetMatrixBoxA(2, 2)) - (GetMatrixBoxA(1, 2) * GetMatrixBoxA(2, 1)))) 
-	//					- (GetMatrixBoxA(0, 1) * ((GetMatrixBoxA(1, 0) * GetMatrixBoxA(2, 2)) - (GetMatrixBoxA(1, 2) *GetMatrixBoxA(2, 0)))) 
-	//					+ (GetMatrixBoxA(0, 2) * ((GetMatrixBoxA(1, 0) * GetMatrixBoxA(2, 1)) - (GetMatrixBoxA(1, 1) * GetMatrixBoxA(2, 0)))));
-	float _fDeterminant = 0;
+	CMatrix4 matrix;
+	for (size_t i = 0; i < 4; ++i)
+	{
+		for (size_t j = 0; j < 4; ++j)
+		{
+			matrix.SetElement(i, j, ReadFromEditBox(_hDlg, GetMatrixBoxA(i, j)));
+		}
+	}
+	WriteToEditBox(_hDlg, IDC_EDIT_DetA, CMatrix4::Determinant(matrix));
+}
 
-	WriteToEditBox(_hDlg, IDC_EDIT_DetA, _fDeterminant);
+void CMatrixCalculator::DeterminantofB(HWND _hDlg)
+{
+	CMatrix4 matrix;
+	for (size_t i = 0; i < 4; ++i)
+	{
+		for (size_t j = 0; j < 4; ++j)
+		{
+			matrix.SetElement(i, j, ReadFromEditBox(_hDlg, GetMatrixBoxB(i, j)));
+		}
+	}
+	WriteToEditBox(_hDlg, IDC_EDIT_DetB, CMatrix4::Determinant(matrix));
+}
+
+void CMatrixCalculator::InverseofA(HWND _hDlg)
+{
+	CMatrix4 matrix;
+	for (size_t i = 0; i < 4; ++i)
+	{
+		for (size_t j = 0; j < 4; ++j)
+		{
+			matrix.SetElement(i, j, ReadFromEditBox(_hDlg, GetMatrixBoxA(i, j)));
+		}
+	}
+
+	CMatrix4::Inverse(matrix, matrix);
+
+	for (size_t i = 0; i < 4; ++i)
+	{
+		for (size_t j = 0; j < 4; ++j)
+		{
+			SetMatrixBoxA(_hDlg, matrix.GetElement(i, j), i, j);
+		}
+	}
+}
+
+void CMatrixCalculator::InverseofB(HWND _hDlg)
+{
+	CMatrix4 matrix;
+	for (size_t i = 0; i < 4; ++i)
+	{
+		for (size_t j = 0; j < 4; ++j)
+		{
+			matrix.SetElement(i, j, ReadFromEditBox(_hDlg, GetMatrixBoxB(i, j)));
+		}
+	}
+
+	CMatrix4::Inverse(matrix, matrix);
+
+	for (size_t i = 0; i < 4; ++i)
+	{
+		for (size_t j = 0; j < 4; ++j)
+		{
+			SetMatrixBoxB(_hDlg, matrix.GetElement(i, j), i, j);
+		}
+	}
 }
 
 void CMatrixCalculator::TransposeA(HWND _hDlg)

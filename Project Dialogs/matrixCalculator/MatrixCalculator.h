@@ -27,7 +27,12 @@ public:
 
 	void HandleSetAtoI(HWND _hDlg);
 	void HandleSetBtoI(HWND _hDlg);
+
 	void DeterminantofA(HWND _hDlg);
+	void DeterminantofB(HWND _hDlg);
+
+	void InverseofA(HWND _hDlg);
+	void InverseofB(HWND _hDlg);
 
 	void TransposeA(HWND _hDlg);
 	void TransposeB(HWND _hDlg);

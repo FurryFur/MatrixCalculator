@@ -167,6 +167,18 @@ BOOL CALLBACK MatrixDlgProc(HWND _hwnd,
 			s_matrixCalculator.SubtractMatrices(_hwnd);
 			break;
 		}
+		//Inverse A
+		case IDCANCEL2:
+		{
+			s_matrixCalculator.InverseofA(_hwnd);
+			break;
+		}
+		//Inverse B
+		case IDCANCEL3:
+		{
+			s_matrixCalculator.InverseofB(_hwnd);
+			break;
+		}
 		//Determinant of A
 		case IDOK3:
 		{
@@ -190,6 +202,12 @@ BOOL CALLBACK MatrixDlgProc(HWND _hwnd,
 		case IDOK6:
 		{
 			s_matrixCalculator.ScalarMultiplyA(_hwnd, ReadFromEditBox(_hwnd, IDC_EDIT_AScaled));
+			break;
+		}
+		//Determinant of B
+		case IDOK7:
+		{
+			s_matrixCalculator.DeterminantofB(_hwnd);
 			break;
 		}
 		//Set B to Identity
