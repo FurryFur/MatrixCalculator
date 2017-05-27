@@ -234,7 +234,76 @@ BOOL CALLBACK QuaternionDlgProc(HWND _hwnd,
 		switch (LOWORD(_wparam))
 		{
 		case IDC_BUTTON1:
+		{
 			s_quaternionCalculator.HandleBtnAPlusB(_hwnd);
+			break;
+		}
+		case IDC_BUTTON5:
+		{
+			s_quaternionCalculator.HandleBtnAMinusB(_hwnd);
+			break;
+		}
+		case IDC_BUTTON6:
+		{
+			s_quaternionCalculator.HandleBtnBMinusA(_hwnd);
+			break;
+		}
+		case IDC_BUTTON2:
+		{
+			s_quaternionCalculator.HandleBtnATimesB(_hwnd);
+			break;
+		}
+		case IDC_BUTTON7:
+		{
+			s_quaternionCalculator.HandleBtnBTimesA(_hwnd);
+			break;
+		}
+		case IDC_BUTTON8:
+		{
+			s_quaternionCalculator.HandleBtnADotB(_hwnd);
+			break;
+		}
+		case IDC_BUTTON3:
+		{
+			s_quaternionCalculator.HandleBtnAConjugate(_hwnd);
+			break;
+		}
+		case IDC_BUTTON9:
+		{
+			s_quaternionCalculator.HandleBtnBConjugate(_hwnd);
+			break;
+		}
+		case IDC_BUTTON10:
+		{
+			s_quaternionCalculator.HandleBtnMagnitudeOfA(_hwnd);
+			break;
+		}
+		case IDC_BUTTON11:
+		{
+			s_quaternionCalculator.HandleBtnMagnitudeOfB(_hwnd);
+			break;
+		}
+		case IDC_BUTTON12:
+		{
+			s_quaternionCalculator.HandleBtnAInverse(_hwnd);
+			break;
+		}
+		case IDC_BUTTON13:
+		{
+			s_quaternionCalculator.HandleBtnBInverse(_hwnd);
+			break;
+		}
+		case IDC_BUTTON14:
+		{
+			s_quaternionCalculator.HandleBtnTTimesA(_hwnd);
+			break;
+		}
+		case IDC_BUTTON15:
+		{
+			s_quaternionCalculator.HandleBtnTTimesB(_hwnd);
+			break;
+		}
+		default:
 			break;
 		}
 

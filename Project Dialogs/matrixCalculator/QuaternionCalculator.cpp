@@ -21,7 +21,8 @@ CQuaternionCalculator::CQuaternionCalculator() :
 		IDC_EDIT10,
 		IDC_EDIT11,
 		IDC_EDIT12,
-}
+	},
+	m_kszScalarTBox(IDC_EDIT9)
 {
 }
 
@@ -35,6 +36,91 @@ void CQuaternionCalculator::HandleBtnAPlusB(HWND _hDlg)
 	CQuaternion qA = GetQuaternionA(_hDlg);
 	CQuaternion qB = GetQuaternionB(_hDlg);
 	SetAnswerBox(_hDlg, qA + qB);
+}
+
+void CQuaternionCalculator::HandleBtnAMinusB(HWND _hDlg)
+{
+	CQuaternion qA = GetQuaternionA(_hDlg);
+	CQuaternion qB = GetQuaternionB(_hDlg);
+	SetAnswerBox(_hDlg, qA - qB);
+}
+
+void CQuaternionCalculator::HandleBtnBMinusA(HWND _hDlg)
+{
+	CQuaternion qA = GetQuaternionA(_hDlg);
+	CQuaternion qB = GetQuaternionB(_hDlg);
+	SetAnswerBox(_hDlg, qB - qA);
+}
+
+void CQuaternionCalculator::HandleBtnATimesB(HWND _hDlg)
+{
+	CQuaternion qA = GetQuaternionA(_hDlg);
+	CQuaternion qB = GetQuaternionB(_hDlg);
+	SetAnswerBox(_hDlg, qA * qB);
+}
+
+void CQuaternionCalculator::HandleBtnBTimesA(HWND _hDlg)
+{
+	CQuaternion qA = GetQuaternionA(_hDlg);
+	CQuaternion qB = GetQuaternionB(_hDlg);
+	SetAnswerBox(_hDlg, qB * qA);
+}
+
+void CQuaternionCalculator::HandleBtnADotB(HWND _hDlg)
+{
+	CQuaternion qA = GetQuaternionA(_hDlg);
+	CQuaternion qB = GetQuaternionB(_hDlg);
+	SetAnswerBox(_hDlg, qA.Dot(qB));
+}
+
+void CQuaternionCalculator::HandleBtnAConjugate(HWND _hDlg)
+{
+	CQuaternion qA = GetQuaternionA(_hDlg);
+	SetAnswerBox(_hDlg, qA.Conjugate());
+}
+
+void CQuaternionCalculator::HandleBtnBConjugate(HWND _hDlg)
+{
+	CQuaternion qB = GetQuaternionB(_hDlg);
+	SetAnswerBox(_hDlg, qB.Conjugate());
+}
+
+void CQuaternionCalculator::HandleBtnMagnitudeOfA(HWND _hDlg)
+{
+	CQuaternion qA = GetQuaternionA(_hDlg);
+	SetAnswerBox(_hDlg, qA.Magnitude());
+}
+
+void CQuaternionCalculator::HandleBtnMagnitudeOfB(HWND _hDlg)
+{
+	CQuaternion qB = GetQuaternionB(_hDlg);
+	SetAnswerBox(_hDlg, qB.Magnitude());
+}
+
+void CQuaternionCalculator::HandleBtnAInverse(HWND _hDlg)
+{
+	CQuaternion qA = GetQuaternionA(_hDlg);
+	SetAnswerBox(_hDlg, qA.Inverse());
+}
+
+void CQuaternionCalculator::HandleBtnBInverse(HWND _hDlg)
+{
+	CQuaternion qB = GetQuaternionB(_hDlg);
+	SetAnswerBox(_hDlg, qB.Inverse());
+}
+
+void CQuaternionCalculator::HandleBtnTTimesA(HWND _hDlg)
+{
+	CQuaternion qA = GetQuaternionA(_hDlg);
+	float fT = ReadFromEditBox(_hDlg, m_kszScalarTBox);
+	SetAnswerBox(_hDlg, fT * qA);
+}
+
+void CQuaternionCalculator::HandleBtnTTimesB(HWND _hDlg)
+{
+	CQuaternion qB = GetQuaternionB(_hDlg);
+	float fT = ReadFromEditBox(_hDlg, m_kszScalarTBox);
+	SetAnswerBox(_hDlg, fT * qB);
 }
 
 CQuaternion CQuaternionCalculator::GetQuaternionA(HWND _hDlg)

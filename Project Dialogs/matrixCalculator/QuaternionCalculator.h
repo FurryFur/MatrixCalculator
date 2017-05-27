@@ -15,6 +15,19 @@ public:
 	~CQuaternionCalculator();
 
 	void HandleBtnAPlusB(HWND _hDlg);
+	void HandleBtnAMinusB(HWND _hDlg);
+	void HandleBtnBMinusA(HWND _hDlg);
+	void HandleBtnATimesB(HWND _hDlg);
+	void HandleBtnBTimesA(HWND _hDlg);
+	void HandleBtnADotB(HWND _hDlg);
+	void HandleBtnAConjugate(HWND _hDlg);
+	void HandleBtnBConjugate(HWND _hDlg);
+	void HandleBtnMagnitudeOfA(HWND _hDlg);
+	void HandleBtnMagnitudeOfB(HWND _hDlg);
+	void HandleBtnAInverse(HWND _hDlg);
+	void HandleBtnBInverse(HWND _hDlg);
+	void HandleBtnTTimesA(HWND _hDlg);
+	void HandleBtnTTimesB(HWND _hDlg);
 
 private:
 	CQuaternion GetQuaternionA(HWND _hDlg);
@@ -25,6 +38,7 @@ private:
 	const std::array<size_t, 4> m_karrQuatABoxes;
 	const std::array<size_t, 4> m_karrQuatBBoxes;
 	const std::array<size_t, 4> m_karrQuatAnsBoxes;
+	const size_t                m_kszScalarTBox;
 };
 
 #endif // QUATERNION_CALCULATOR_H
