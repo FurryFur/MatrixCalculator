@@ -179,6 +179,10 @@ void CMatrixCalculator::InverseofA(HWND _hDlg)
 	{
 		for (size_t j = 0; j < 4; ++j)
 		{
+			if (matrix.GetElement(i, j) == -0)
+			{
+				matrix.SetElement(i, j, 0);
+			}
 			SetMatrixBoxA(_hDlg, matrix.GetElement(i, j), i, j);
 		}
 	}
@@ -201,6 +205,10 @@ void CMatrixCalculator::InverseofB(HWND _hDlg)
 	{
 		for (size_t j = 0; j < 4; ++j)
 		{
+			if (matrix.GetElement(i, j) == -0)
+			{
+				matrix.SetElement(i, j, 0);
+			}
 			SetMatrixBoxB(_hDlg, matrix.GetElement(i, j), i, j);
 		}
 	}
