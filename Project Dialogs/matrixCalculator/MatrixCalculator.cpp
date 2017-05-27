@@ -1,3 +1,16 @@
+//
+// Bachelor of Software Engineering
+// Media Design School
+// Auckland
+// New Zealand
+//
+// (c) 2016 Media Design School
+//
+// File Name	: 
+// Description	: 
+// Author		: Jack Mair : Lance Chaney
+// Mail			: jack.mair@mediadesign.school.nz : lance.chaney@mediadesign.school.nz
+//
 #include "MatrixCalculator.h"
 #include "utils.h"
 #include "resource.h"
