@@ -21,6 +21,7 @@
 #include "utils.h"
 #include "resource.h"
 #include "MatrixCalculator.h"
+#include "QuaternionCalculator.h"
 
 #define WINDOW_CLASS_NAME L"WINCLASS1"
 
@@ -282,9 +283,22 @@ BOOL CALLBACK QuaternionDlgProc(HWND _hwnd,
 	WPARAM _wparam,
 	LPARAM _lparam)
 {
+	static CQuaternionCalculator s_quaternionCalculator;
 
 	switch (_msg)
 	{
+	case WM_COMMAND:
+	{
+		switch (LOWORD(_wparam))
+		{
+		case IDC_BUTTON1:
+			s_quaternionCalculator.HandleBtnAPlusB(_hwnd);
+			break;
+		}
+
+		return TRUE;
+		break;
+	}
 	case WM_CLOSE:
 	{
 		ShowWindow(_hwnd, SW_HIDE);
