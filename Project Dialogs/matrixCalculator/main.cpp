@@ -8,8 +8,8 @@
 //
 // File Name	: 
 // Description	: 
-// Author		: Your Name
-// Mail			: your.name@mediadesign.school.nz
+// Author		: Jack Mair : Lance Chaney
+// Mail			: jack.mair@mediadesign.school.nz : lance.chaney@mediadesign.school.nz
 //
 
 
