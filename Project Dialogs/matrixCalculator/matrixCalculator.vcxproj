@@ -78,6 +78,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="MatrixCalculator.h" />
+    <ClInclude Include="Quaternion.h" />
+    <ClInclude Include="QuaternionCalculator.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
@@ -87,6 +89,8 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MatrixCalculator.cpp" />
+    <ClCompile Include="Quaternion.cpp" />
+    <ClCompile Include="QuaternionCalculator.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
