@@ -50,7 +50,7 @@ std::wstring ToWideString(const T& _value)
 	return (theStream.str());
 }
 
-float ReadFromEditBox(HWND _hDlg, int _iResourceID)
+inline float ReadFromEditBox(HWND _hDlg, int _iResourceID)
 {
 	wchar_t _pcValue[10];
 	ZeroMemory(_pcValue, 10);
@@ -65,7 +65,7 @@ float ReadFromEditBox(HWND _hDlg, int _iResourceID)
 	}
 }
 
-void WriteToEditBox(HWND _hDlg, int _iResourceID, float _fValue)
+inline void WriteToEditBox(HWND _hDlg, int _iResourceID, float _fValue)
 {
 	std::wstring _strValue = ToWideString(_fValue);
 	SetDlgItemText(_hDlg, _iResourceID, _strValue.c_str());

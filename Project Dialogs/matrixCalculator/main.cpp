@@ -20,6 +20,7 @@
 
 #include "utils.h"
 #include "resource.h"
+#include "MatrixCalculator.h"
 
 #define WINDOW_CLASS_NAME L"WINCLASS1"
 
@@ -135,6 +136,7 @@ BOOL CALLBACK MatrixDlgProc(HWND _hwnd,
 	LPARAM _lparam)
 {
 	static float _value;
+	static CMatrixCalculator s_matrixCalculator;
 	switch (_msg)
 	{
 	case WM_COMMAND:
@@ -144,6 +146,16 @@ BOOL CALLBACK MatrixDlgProc(HWND _hwnd,
 		case IDC_EDIT_A11:
 		{
 			_value = ReadFromEditBox(_hwnd, IDC_EDIT_A11);
+			break;
+		}
+		case IDOK4:
+		{
+			s_matrixCalculator.HandleSetAtoI(_hwnd);
+			break;
+		}
+		case IDOK8:
+		{
+			s_matrixCalculator.HandleSetBtoI(_hwnd);
 			break;
 		}
 		default:
