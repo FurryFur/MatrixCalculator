@@ -21,6 +21,7 @@
 #include "utils.h"
 #include "resource.h"
 #include "MatrixCalculator.h"
+#include "TransformationCalculator.h"
 #include "QuaternionCalculator.h"
 
 #define WINDOW_CLASS_NAME L"WINCLASS1"
@@ -137,11 +138,11 @@ BOOL CALLBACK MatrixDlgProc(HWND _hwnd,
 	LPARAM _lparam)
 {
 	static float _value;
-	static CMatrixCalculator s_matrixCalculator;
 	switch (_msg)
 	{
 	case WM_COMMAND:
 	{
+		static CMatrixCalculator s_matrixCalculator;
 		switch (LOWORD(_wparam))
 		{
 		case IDC_EDIT_A11:
@@ -259,9 +260,62 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 	WPARAM _wparam,
 	LPARAM _lparam)
 {
-
+	static CTransformationCalculator s_transformationCalculator;
 	switch (_msg)
 	{
+	case WM_COMMAND:
+	{
+		static CMatrixCalculator s_matrixCalculator;
+		switch (LOWORD(_wparam))
+		{
+		//identity
+		case IDC_BUTTON17:
+		{
+			s_transformationCalculator.HandleSetI(_hwnd);
+			break;
+		}
+		//scale
+		case IDC_BUTTON5:
+		{
+			s_transformationCalculator.ScaleTransformation(_hwnd, ReadFromEditBox(_hwnd, IDC_EDIT1), ReadFromEditBox(_hwnd, IDC_EDIT1), ReadFromEditBox(_hwnd, IDC_EDIT1));
+			break;
+		}
+		//scew
+		case IDC_BUTTON16:
+		{
+			s_transformationCalculator.ScaleTransformation(_hwnd, ReadFromEditBox(_hwnd, IDC_EDIT1), ReadFromEditBox(_hwnd, IDC_EDIT2), ReadFromEditBox(_hwnd, IDC_EDIT3));
+			break;
+		}
+		//translate
+		case IDC_BUTTON7:
+		{
+			s_transformationCalculator.TranslationTransformation(_hwnd, ReadFromEditBox(_hwnd, IDC_EDIT4), ReadFromEditBox(_hwnd, IDC_EDIT5), ReadFromEditBox(_hwnd, IDC_EDIT6));
+			break;
+		}
+		//rotation
+		case IDC_BUTTON8:
+		{
+			s_transformationCalculator.RotationTransformation(_hwnd, ReadFromEditBox(_hwnd, IDC_EDIT7), ReadFromEditBox(_hwnd, IDC_EDIT28), ReadFromEditBox(_hwnd, IDC_EDIT30), ReadFromEditBox(_hwnd, IDC_EDIT13));
+			break;
+		}
+		//reflection
+		case IDC_BUTTON18:
+		{
+			s_transformationCalculator.ReflectionTransformation(_hwnd, ReadFromEditBox(_hwnd, IDC_EDIT32), ReadFromEditBox(_hwnd, IDC_EDIT34), ReadFromEditBox(_hwnd, IDC_EDIT35));
+			break;
+		}
+		//projection
+		case IDC_BUTTON9:
+		{
+			s_transformationCalculator.ProjectionTransformation(_hwnd, ReadFromEditBox(_hwnd, IDC_EDIT14), ReadFromEditBox(_hwnd, IDC_EDIT29), ReadFromEditBox(_hwnd, IDC_EDIT31), ReadFromEditBox(_hwnd, IDC_EDIT15));
+			break;
+		}
+		default:
+			break;
+		}
+		return TRUE;
+		break;
+	}
 	case WM_CLOSE:
 	{
 		ShowWindow(_hwnd, SW_HIDE);

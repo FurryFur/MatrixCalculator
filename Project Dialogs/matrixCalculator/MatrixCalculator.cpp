@@ -259,7 +259,7 @@ void  CMatrixCalculator::ScalarMultiplyA(HWND _hDlg, float _fScalar) {
 	{
 		for (size_t j = 0; j < 4; ++j)
 		{
-			size_t _szScaledValue = (_fScalar * ReadFromEditBox(_hDlg, GetMatrixBoxA(i, j)));
+			float _szScaledValue = (_fScalar * ReadFromEditBox(_hDlg, GetMatrixBoxA(i, j)));
 			SetMatrixBoxA(_hDlg, _szScaledValue, i, j);
 		}
 	}
@@ -270,7 +270,7 @@ void  CMatrixCalculator::ScalarMultiplyB(HWND _hDlg, float _fScalar) {
 	{
 		for (size_t j = 0; j < 4; ++j)
 		{
-			size_t _szScaledValue = (_fScalar * ReadFromEditBox(_hDlg, GetMatrixBoxB(i, j)));
+			float _szScaledValue = (_fScalar * ReadFromEditBox(_hDlg, GetMatrixBoxB(i, j)));
 			SetMatrixBoxB(_hDlg, _szScaledValue, i, j);
 		}
 	}

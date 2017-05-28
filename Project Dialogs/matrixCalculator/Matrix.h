@@ -49,6 +49,14 @@ public:
 		typename = std::enable_if_t<(szRows2 == szCols2 && szRows2 <= 4)> >
 	static CMatrix<szRows, szCols>& Scale(const CMatrix<szRows - 1, 1>& vec, CMatrix<szRows, szCols>& _rResult);
 
+	template <size_t szRows2 = szRows, size_t szCols2 = szCols,
+		typename = std::enable_if_t<(szRows2 == szCols2 && szRows2 <= 4)> >
+		static CMatrix<szRows, szCols>& Translate(const CMatrix<szRows, 1>& vec, CMatrix<szRows, szCols>& _rResult);
+
+	template <size_t szRows2 = szRows, size_t szCols2 = szCols,
+		typename = std::enable_if_t<(szRows2 == szCols2 && szRows2 <= 4)> >
+		static CMatrix<szRows, szCols>& Translate(const CMatrix<szRows - 1, 1>& vec, CMatrix<szRows, szCols>& _rResult);
+
 private:
 	float m_fMatrix[szRows][szRows];
 
@@ -351,6 +359,58 @@ inline CMatrix<szRows, szCols>& CMatrix<szRows, szCols>::Scale(const CMatrix<szR
 					break;
 				}
 
+				_rResult.m_fMatrix[r][c] = vec3.GetElement(r, 0);
+			}
+			else
+			{
+				_rResult.m_fMatrix[r][c] = 0;
+			}
+		}
+	}
+
+	return _rResult;
+}
+
+template <size_t szRows, size_t szCols>
+template <size_t szRows2, size_t szCols2, typename>
+inline CMatrix<szRows, szCols>& CMatrix<szRows, szCols>::Translate(const CMatrix<szRows, 1>& vec, CMatrix<szRows, szCols>& _rResult)
+{
+	for (int r = 0; r < szRows; ++r)
+	{
+		for (int c = 0; c < szCols; ++c)
+		{
+			if (r == (szRows - 1))
+			{
+				_rResult.m_fMatrix[r][c] = vec.GetElement(r, 0);
+			}
+			else if (r == c)
+			{
+				_rResult.m_fMatrix[r][c] = 1;
+			}
+			else
+			{
+				_rResult.m_fMatrix[r][c] = 0;
+			}
+		}
+	}
+
+	return _rResult;
+}
+
+template <size_t szRows, size_t szCols>
+template <size_t szRows2, size_t szCols2, typename>
+inline CMatrix<szRows, szCols>& CMatrix<szRows, szCols>::Translate(const CMatrix<szRows - 1, 1>& vec3, CMatrix<szRows, szCols>& _rResult)
+{
+	for (int r = 0; r < szRows; ++r)
+	{
+		for (int c = 0; c < szCols; ++c)
+		{
+			if (r == c)
+			{
+				_rResult.m_fMatrix[r][c] = 1;
+			}
+			else if (c == (szCols - 1))
+			{
 				_rResult.m_fMatrix[r][c] = vec3.GetElement(r, 0);
 			}
 			else
