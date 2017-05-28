@@ -35,18 +35,27 @@ public:
 	static CMatrix& Multiply(float _fScalar, const CMatrix& _rA, CMatrix& _rResult);
 	static CMatrix& Multiply(const CMatrix& _rA, const CMatrix& _rB, CMatrix& _rResult);
 
-	static CMatrix& Transpose(const CMatrix& _rA, CMatrix& _rResult);
+	static CMatrix<szCols, szRows>& Transpose(const CMatrix& _rA, CMatrix<szCols, szRows>& _rResult);
 
+	template <size_t _szRows = szRows, size_t _szCols = szCols,
+		typename = std::enable_if_t<(_szRows == _szCols)> >
 	static CMatrix& Identity(CMatrix& _rResult);
+
+	template <size_t _szRows = szRows, size_t _szCols = szCols,
+		typename = std::enable_if_t<(_szRows == _szCols)> >
 	static float Determinant(const CMatrix& _rA);
+
+	template <size_t _szRows = szRows, size_t _szCols = szCols,
+		typename = std::enable_if_t<(_szRows == _szCols)> >
 	static bool Inverse(const CMatrix& _rA, CMatrix& _rResult);
 
-	template <size_t szRows2 = szRows, size_t szCols2 = szCols,
-		typename = std::enable_if_t<(szRows2 == szCols2 && szRows2 <= 4)> >
+	template <size_t _szRows = szRows, size_t _szCols = szCols,
+		typename = std::enable_if_t<(_szRows == _szCols && _szRows <= 4)> >
 	static CMatrix<szRows, szCols>& Scale(const CMatrix<szRows, 1>& vec, CMatrix<szRows, szCols>& _rResult);
 
-	template <size_t szRows2 = szRows, size_t szCols2 = szCols,
-		typename = std::enable_if_t<(szRows2 == szCols2 && szRows2 <= 4)> >
+	// For scaling an Affine matrix
+	template <size_t _szRows = szRows, size_t _szCols = szCols,
+		typename = std::enable_if_t<(_szRows == _szCols && _szRows <= 4)> >
 	static CMatrix<szRows, szCols>& Scale(const CMatrix<szRows - 1, 1>& vec, CMatrix<szRows, szCols>& _rResult);
 
 private:
@@ -78,6 +87,7 @@ float CMatrix<szRows, szCols>::GetElement(int _iR, int _iC) const
 }
 
 template <size_t szRows, size_t szCols>
+template <size_t _szRows, size_t _szCols, typename>
 CMatrix<szRows, szCols> & CMatrix<szRows, szCols>::Identity(CMatrix<szRows, szCols> & _rResult)
 {
 	for (int r = 0; r < szRows; ++r)
@@ -190,7 +200,7 @@ CMatrix<szRows, szCols> & CMatrix<szRows, szCols>::Multiply(const CMatrix<szRows
 }
 
 template <size_t szRows, size_t szCols>
-CMatrix<szRows, szCols> & CMatrix<szRows, szCols>::Transpose(const CMatrix<szRows, szCols> & _rA, CMatrix<szRows, szCols> & _rResult)
+CMatrix<szCols, szRows> & CMatrix<szRows, szCols>::Transpose(const CMatrix<szRows, szCols> & _rA, CMatrix<szCols, szRows> & _rResult)
 {
 	for (int r = 0; r < szRows; ++r)
 	{
@@ -204,6 +214,7 @@ CMatrix<szRows, szCols> & CMatrix<szRows, szCols>::Transpose(const CMatrix<szRow
 }
 
 template <size_t szRows, size_t szCols>
+template <size_t _szRows, size_t _szCols, typename>
 float CMatrix<szRows, szCols>::Determinant(const CMatrix<szRows, szCols> & _rA)
 {
 	float fDeterminant = 0;
@@ -220,6 +231,7 @@ float CMatrix<szRows, szCols>::Determinant(const CMatrix<szRows, szCols> & _rA)
 }
 
 template <>
+template <>
 inline float CMatrix<2, 2>::Determinant(const CMatrix<2, 2> & _rA)
 {
 	float fA = _rA.m_fMatrix[0][0];
@@ -230,12 +242,14 @@ inline float CMatrix<2, 2>::Determinant(const CMatrix<2, 2> & _rA)
 }
 
 template <>
+template <>
 inline float CMatrix<1, 1>::Determinant(const CMatrix<1, 1> & _rA)
 {
 	return _rA.m_fMatrix[0][0];
 }
 
 template <size_t szRows, size_t szCols>
+template <size_t _szRows, size_t _szCols, typename>
 bool CMatrix<szRows, szCols>::Inverse(const CMatrix<szRows, szCols> & _rA, CMatrix<szRows, szCols> & _rResult)
 {
 	float fDeterminant = CMatrix::Determinant(_rA);
@@ -314,7 +328,7 @@ inline CMatrix<szRows, szCols>::CMatrix(Floats... floats)
 }
 
 template <size_t szRows, size_t szCols>
-template <size_t szRows2, size_t szCols2, typename>
+template <size_t _szRows, size_t _szCols, typename>
 inline CMatrix<szRows, szCols>& CMatrix<szRows, szCols>::Scale(const CMatrix<szRows, 1>& vec, CMatrix<szRows, szCols>& _rResult)
 {
 	for (int r = 0; r < szRows; ++r)
@@ -336,7 +350,7 @@ inline CMatrix<szRows, szCols>& CMatrix<szRows, szCols>::Scale(const CMatrix<szR
 }
 
 template <size_t szRows, size_t szCols>
-template <size_t szRows2, size_t szCols2, typename>
+template <size_t _szRows, size_t _szCols, typename>
 inline CMatrix<szRows, szCols>& CMatrix<szRows, szCols>::Scale(const CMatrix<szRows - 1, 1>& vec3, CMatrix<szRows, szCols>& _rResult)
 {
 	for (int r = 0; r < szRows; ++r)

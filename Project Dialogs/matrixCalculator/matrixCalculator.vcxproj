@@ -77,6 +77,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="GaussianCalculator.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="MatrixCalculator.h" />
     <ClInclude Include="Quaternion.h" />
@@ -88,6 +89,7 @@
     <ResourceCompile Include="matrixCalculator.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GaussianCalculator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MatrixCalculator.cpp" />
     <ClCompile Include="Quaternion.cpp" />
