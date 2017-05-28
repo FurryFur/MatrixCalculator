@@ -50,16 +50,22 @@ public:
 	static bool Inverse(const CMatrix& _rA, CMatrix& _rResult);
 
 	template <size_t _szRows = szRows, size_t _szCols = szCols,
-		typename = std::enable_if_t<(_szRows == _szCols && _szRows <= 4)> >
+		typename = std::enable_if_t<(_szRows == _szCols)> >
 	static CMatrix<szRows, szCols>& Scale(const CMatrix<szRows, 1>& vec, CMatrix<szRows, szCols>& _rResult);
 
 	// For scaling an Affine matrix
 	template <size_t _szRows = szRows, size_t _szCols = szCols,
-		typename = std::enable_if_t<(_szRows == _szCols && _szRows <= 4)> >
+		typename = std::enable_if_t<(_szRows == _szCols)> >
 	static CMatrix<szRows, szCols>& Scale(const CMatrix<szRows - 1, 1>& vec, CMatrix<szRows, szCols>& _rResult);
 
+	// Methods for Gaussian Elimination
+	void MultiplyRow(size_t _szRow, float _fScalar);
+	void SwapRow(size_t _szRow1, size_t _szRow2);
+	void AddMultipleOfRowToRow(float _fScalar, size_t _szRowSrc, size_t _szRowDst);
+	static void RowEchleonForm(CMatrix& _rmat);
+
 private:
-	float m_fMatrix[szRows][szRows];
+	std::array<std::array<float, szCols>, szRows> m_arrfMatrix;
 
 	CMatrix<szRows - 1, szCols - 1>& ConstructView(int _iBlankedOutR, int _iBlankedOutC, CMatrix<szRows - 1, szCols - 1>& matView) const;
 };
@@ -77,13 +83,13 @@ CMatrix<szRows, szCols>::~CMatrix()
 template <size_t szRows, size_t szCols>
 void CMatrix<szRows, szCols>::SetElement(int _iR, int _iC, float _fValue)
 {
-	m_fMatrix[_iR][_iC] = _fValue;
+	m_arrfMatrix[_iR][_iC] = _fValue;
 }
 
 template <size_t szRows, size_t szCols>
 float CMatrix<szRows, szCols>::GetElement(int _iR, int _iC) const
 {
-	return m_fMatrix[_iR][_iC];
+	return m_arrfMatrix[_iR][_iC];
 }
 
 template <size_t szRows, size_t szCols>
@@ -96,11 +102,11 @@ CMatrix<szRows, szCols> & CMatrix<szRows, szCols>::Identity(CMatrix<szRows, szCo
 		{
 			if (r == c)
 			{
-				_rResult.m_fMatrix[r][c] = 1;
+				_rResult.m_arrfMatrix[r][c] = 1;
 			}
 			else
 			{
-				_rResult.m_fMatrix[r][c] = 0;
+				_rResult.m_arrfMatrix[r][c] = 0;
 			}
 		}
 	}
@@ -114,7 +120,7 @@ CMatrix<szRows, szCols> & CMatrix<szRows, szCols>::Zero(CMatrix<szRows, szCols> 
 	{
 		for (int c = 0; c < szRows; ++c)
 		{
-			_rResult.m_fMatrix[r][c] = 0;
+			_rResult.m_arrfMatrix[r][c] = 0;
 		}
 	}
 	return _rResult;
@@ -128,7 +134,7 @@ bool CMatrix<szRows, szCols>::Equals(const CMatrix<szRows, szCols> & _rA, const 
 		for (int c = 0; c < szCols; ++c)
 		{
 			// Return false immediately, if we find an unequal element
-			if (abs(_rA.m_fMatrix[r][c] - _rB.m_fMatrix[r][c]) > 0.0001)
+			if (abs(_rA.m_arrfMatrix[r][c] - _rB.m_arrfMatrix[r][c]) > 0.0001)
 			{
 				return false;
 			}
@@ -146,7 +152,7 @@ CMatrix<szRows, szCols> & CMatrix<szRows, szCols>::Add(const CMatrix<szRows, szC
 	{
 		for (int c = 0; c < szRows; ++c)
 		{
-			_rResult.m_fMatrix[r][c] = _rA.m_fMatrix[r][c] + _rB.m_fMatrix[r][c];
+			_rResult.m_arrfMatrix[r][c] = _rA.m_arrfMatrix[r][c] + _rB.m_arrfMatrix[r][c];
 		}
 	}
 
@@ -160,7 +166,7 @@ CMatrix<szRows, szCols> & CMatrix<szRows, szCols>::Subtract(const CMatrix<szRows
 	{
 		for (int c = 0; c < szCols; ++c)
 		{
-			_rResult.m_fMatrix[r][c] = _rA.m_fMatrix[r][c] - _rB.m_fMatrix[r][c];
+			_rResult.m_arrfMatrix[r][c] = _rA.m_arrfMatrix[r][c] - _rB.m_arrfMatrix[r][c];
 		}
 	}
 
@@ -174,7 +180,7 @@ CMatrix<szRows, szCols> & CMatrix<szRows, szCols>::Multiply(float _fScalar, cons
 	{
 		for (int c = 0; c < szCols; ++c)
 		{
-			_rResult.m_fMatrix[r][c] = _fScalar * _rA.m_fMatrix[r][c];
+			_rResult.m_arrfMatrix[r][c] = _fScalar * _rA.m_arrfMatrix[r][c];
 		}
 	}
 
@@ -188,10 +194,10 @@ CMatrix<szRows, szCols> & CMatrix<szRows, szCols>::Multiply(const CMatrix<szRows
 	{
 		for (int c = 0; c < szRows; ++c)
 		{
-			_rResult.m_fMatrix[r][c] = 0;
+			_rResult.m_arrfMatrix[r][c] = 0;
 			for (int i = 0; i < szRows; ++i)
 			{
-				_rResult.m_fMatrix[r][c] += _rA.m_fMatrix[r][i] * _rB.m_fMatrix[i][c];
+				_rResult.m_arrfMatrix[r][c] += _rA.m_arrfMatrix[r][i] * _rB.m_arrfMatrix[i][c];
 			}
 		}
 	}
@@ -206,7 +212,7 @@ CMatrix<szCols, szRows> & CMatrix<szRows, szCols>::Transpose(const CMatrix<szRow
 	{
 		for (int c = 0; c < szCols; ++c)
 		{
-			_rResult.m_fMatrix[r][c] = _rA.m_fMatrix[c][r];
+			_rResult.m_arrfMatrix[r][c] = _rA.m_arrfMatrix[c][r];
 		}
 	}
 
@@ -223,7 +229,7 @@ float CMatrix<szRows, szCols>::Determinant(const CMatrix<szRows, szCols> & _rA)
 		CMatrix<szRows - 1, szCols - 1> matView;
 		_rA.ConstructView(0, c, matView);
 
-		float fA = _rA.m_fMatrix[0][c];
+		float fA = _rA.m_arrfMatrix[0][c];
 		fDeterminant += pow(-1.0f, c) * fA * CMatrix<szRows - 1, szCols - 1>::Determinant(matView);
 	}
 
@@ -234,10 +240,10 @@ template <>
 template <>
 inline float CMatrix<2, 2>::Determinant(const CMatrix<2, 2> & _rA)
 {
-	float fA = _rA.m_fMatrix[0][0];
-	float fB = _rA.m_fMatrix[0][1];
-	float fC = _rA.m_fMatrix[1][0];
-	float fD = _rA.m_fMatrix[1][1];
+	float fA = _rA.m_arrfMatrix[0][0];
+	float fB = _rA.m_arrfMatrix[0][1];
+	float fC = _rA.m_arrfMatrix[1][0];
+	float fD = _rA.m_arrfMatrix[1][1];
 	return fA * fD - fB * fC;
 }
 
@@ -245,7 +251,7 @@ template <>
 template <>
 inline float CMatrix<1, 1>::Determinant(const CMatrix<1, 1> & _rA)
 {
-	return _rA.m_fMatrix[0][0];
+	return _rA.m_arrfMatrix[0][0];
 }
 
 template <size_t szRows, size_t szCols>
@@ -301,7 +307,7 @@ CMatrix<szRows - 1, szCols - 1>& CMatrix<szRows, szCols>::ConstructView(int _iBl
 			if (srcC == _iBlankedOutC)
 				++srcC;
 
-			_matView.SetElement(viewR, viewC, m_fMatrix[srcR][srcC]);
+			_matView.SetElement(viewR, viewC, m_arrfMatrix[srcR][srcC]);
 
 			++srcC;
 		}
@@ -322,7 +328,7 @@ inline CMatrix<szRows, szCols>::CMatrix(Floats... floats)
 	{
 		for (int c = 0; c < szCols; ++c)
 		{
-			m_fMatrix[r][c] = arrfValues[c + r * szCols];
+			m_arrfMatrix[r][c] = arrfValues[c + r * szCols];
 		}
 	}
 }
@@ -337,11 +343,11 @@ inline CMatrix<szRows, szCols>& CMatrix<szRows, szCols>::Scale(const CMatrix<szR
 		{
 			if (r == c)
 			{
-				_rResult.m_fMatrix[r][c] = vec.GetElement(r, 0);
+				_rResult.m_arrfMatrix[r][c] = vec.GetElement(r, 0);
 			}
 			else
 			{
-				_rResult.m_fMatrix[r][c] = 0;
+				_rResult.m_arrfMatrix[r][c] = 0;
 			}
 		}
 	}
@@ -349,6 +355,7 @@ inline CMatrix<szRows, szCols>& CMatrix<szRows, szCols>::Scale(const CMatrix<szR
 	return _rResult;
 }
 
+// For scaling an Affine matrix
 template <size_t szRows, size_t szCols>
 template <size_t _szRows, size_t _szCols, typename>
 inline CMatrix<szRows, szCols>& CMatrix<szRows, szCols>::Scale(const CMatrix<szRows - 1, 1>& vec3, CMatrix<szRows, szCols>& _rResult)
@@ -361,20 +368,92 @@ inline CMatrix<szRows, szCols>& CMatrix<szRows, szCols>::Scale(const CMatrix<szR
 			{
 				if (r == (szRows - 1))
 				{
-					_rResult.m_fMatrix[r][c] = 1;
+					_rResult.m_arrfMatrix[r][c] = 1;
 					break;
 				}
 
-				_rResult.m_fMatrix[r][c] = vec3.GetElement(r, 0);
+				_rResult.m_arrfMatrix[r][c] = vec3.GetElement(r, 0);
 			}
 			else
 			{
-				_rResult.m_fMatrix[r][c] = 0;
+				_rResult.m_arrfMatrix[r][c] = 0;
 			}
 		}
 	}
 
 	return _rResult;
+}
+
+template<size_t szRows, size_t szCols>
+inline void CMatrix<szRows, szCols>::MultiplyRow(size_t _szRow, float _fScalar)
+{
+	for (size_t c = 0; c < szCols; ++c)
+	{
+		m_arrfMatrix[_szRow][c] *= _fScalar;
+	}
+}
+
+template<size_t szRows, size_t szCols>
+inline void CMatrix<szRows, szCols>::SwapRow(size_t _szRow1, size_t _szRow2)
+{
+	std::array<float, szCols> arrTmp = m_arrfMatrix[_szRow1];
+	m_arrfMatrix[_szRow1] = m_arrfMatrix[_szRow2];
+	m_arrfMatrix[_szRow2] = arrTmp;
+}
+
+template<size_t szRows, size_t szCols>
+inline void CMatrix<szRows, szCols>::AddMultipleOfRowToRow(float _fScalar, size_t _szRowSrc, size_t _szRowDst)
+{
+	for (size_t c = 0; c < szCols; ++c)
+	{
+		m_arrfMatrix[_szRowDst][c] += _fScalar * m_arrfMatrix[_szRowSrc][c];
+	}
+}
+
+template<size_t szRows, size_t szCols>
+inline void CMatrix<szRows, szCols>::RowEchleonForm(CMatrix<szRows, szCols> & _rmat)
+{
+	size_t szPivotRow = 0;
+	for (size_t szPivotCol = 0; (szPivotRow < szRows) && (szPivotCol < szCols); ++szPivotCol)
+	{
+		// Find the k-th pivot
+		size_t szMaxPivotRow = szPivotRow;
+		for (size_t szCurRow = szPivotRow + 1; szCurRow < szRows; ++szCurRow)
+		{
+			if (_rmat.m_arrfMatrix[szCurRow][szPivotCol] > _rmat.m_arrfMatrix[szMaxPivotRow][szPivotCol])
+			{
+				szMaxPivotRow = szCurRow;
+			}
+		}
+		if (szPivotRow != szMaxPivotRow)
+		{
+			_rmat.SwapRow(szPivotRow, szMaxPivotRow);
+		}
+
+		// Handle column of zeros
+		if (_rmat.m_arrfMatrix[szPivotRow][szPivotCol] == 0)
+		{
+			continue;
+		}
+		// Normal case: Do Gaussian Elimination steps
+		else
+		{
+			for (size_t szCurRow = szPivotRow + 1; szCurRow < szRows; ++szCurRow)
+			{
+				float fFactor = -(_rmat.m_arrfMatrix[szCurRow][szPivotCol] / _rmat.m_arrfMatrix[szPivotRow][szPivotCol]);
+				for (size_t szCurCol = szPivotCol + 1; szCurCol < szCols; ++szCurCol)
+				{
+					_rmat.m_arrfMatrix[szCurRow][szCurCol] += fFactor * _rmat.m_arrfMatrix[szPivotRow][szCurCol];
+				}
+
+				// Fill lower triangular part of matrix with zeros
+				_rmat.m_arrfMatrix[szCurRow][szPivotCol] = 0;
+			}
+
+
+			++szPivotRow;
+		}
+	}
 }
 
 typedef CMatrix<2, 2> CMatrix2;

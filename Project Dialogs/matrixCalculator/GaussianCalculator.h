@@ -3,6 +3,8 @@
 #ifndef GAUSSIAN_CALCULATOR_H
 #define GAUSSIAN_CALCULATOR_H
 
+#define NOMINMAX
+#include <array>
 #include <Windows.h>
 
 #include "Matrix.h"
@@ -13,13 +15,19 @@ public:
 	CGaussianCalculator();
 	~CGaussianCalculator();
 
+	void HandleBtnApplyRowMultiply(HWND _hDlg);
+	void HandleBtnApplyRowSwap(HWND _hDlg);
+	void HandleBtnApplyAddMultipleOfRowToRow(HWND _hDlg);
+	void HandleBtnRowEchelon(HWND _hDlg);
+
 private:
 	CMatrix<3, 4> GetMatrix(HWND _hDlg);
+	void SetMatrixBoxes(HWND _hDlg, const CMatrix<3, 4>&);
 
-	/*const std::array<size_t, 4> m_karrMatrixBoxes;
-	const std::array<size_t, 4> m_karrQuatBBoxes;
-	const std::array<size_t, 4> m_karrQuatAnsBoxes;
-	const size_t                m_kszScalarTBox;*/
+	const std::array<std::array<size_t, 4>, 3> m_k2darrMatrixBoxes;
+	const std::array<size_t, 2> m_karrMultiplyRowBoxes;
+	const std::array<size_t, 2> m_karrSwapRowBoxes;
+	const std::array<size_t, 3> m_karrAddMultipleOfRowBoxes;
 };
 
 #endif // GUASSIAN_CALCULATOR_H

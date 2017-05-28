@@ -14,6 +14,7 @@
 
 
 #define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
 
 #include <windows.h>   // Include all the windows headers.
 #include <windowsx.h>  // Include useful macros.
@@ -22,6 +23,7 @@
 #include "resource.h"
 #include "MatrixCalculator.h"
 #include "QuaternionCalculator.h"
+#include "GaussianCalculator.h"
 
 #define WINDOW_CLASS_NAME L"WINCLASS1"
 
@@ -280,9 +282,41 @@ BOOL CALLBACK GaussianDlgProc(HWND _hwnd,
 	WPARAM _wparam,
 	LPARAM _lparam)
 {
+	static CGaussianCalculator s_gaussianCalculator;
 
 	switch (_msg)
 	{
+	case WM_COMMAND:
+	{
+		switch (LOWORD(_wparam))
+		{
+		case IDC_BUTTON1:
+		{
+			s_gaussianCalculator.HandleBtnApplyRowMultiply(_hwnd);
+			break;
+		}
+		case IDC_BUTTON2:
+		{
+			s_gaussianCalculator.HandleBtnApplyRowSwap(_hwnd);
+			break;
+		}
+		case IDC_BUTTON3:
+		{
+			s_gaussianCalculator.HandleBtnApplyAddMultipleOfRowToRow(_hwnd);
+			break;
+		}
+		case IDC_BTNSOLVERE:
+		{
+			s_gaussianCalculator.HandleBtnRowEchelon(_hwnd);
+			break;
+		}
+		default:
+			break;
+		}
+
+		return TRUE;
+		break;
+	}
 	case WM_CLOSE:
 	{
 		ShowWindow(_hwnd, SW_HIDE);

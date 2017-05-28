@@ -17,6 +17,7 @@
 #if !defined(__MATRIXCALCULATOR_H__)
 #define __MATRIXCALCULATOR_H__
 
+#define NOMINMAX
 #include <Windows.h>
 
 class CMatrixCalculator
