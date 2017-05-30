@@ -3,14 +3,17 @@
 #include "utils.h"
 
 CGaussianCalculator::CGaussianCalculator() :
-	m_k2darrMatrixBoxes{{
+	m_k2darrMatrixBoxes{ {
 		{ IDC_EDIT1, IDC_EDIT2, IDC_EDIT3, IDC_EDIT4 },
 		{ IDC_EDIT5, IDC_EDIT6, IDC_EDIT7, IDC_EDIT8 },
 		{ IDC_EDIT9, IDC_EDIT10, IDC_EDIT11, IDC_EDIT12 },
-	}},
+	} },
 	m_karrMultiplyRowBoxes{ IDC_EDIT13, IDC_EDIT14 },
 	m_karrSwapRowBoxes{ IDC_EDIT16, IDC_EDIT17 },
-	m_karrAddMultipleOfRowBoxes{ IDC_EDIT19, IDC_EDIT20, IDC_EDIT22 }
+	m_karrAddMultipleOfRowBoxes{ IDC_EDIT19, IDC_EDIT20, IDC_EDIT22 },
+	m_szCurPivotRow(0),
+	m_szCurPivotCol(0),
+	m_iCurEliminationDir(1)
 {
 }
 
@@ -73,8 +76,8 @@ void CGaussianCalculator::HandleBtnApplyAddMultipleOfRowToRow(HWND _hDlg)
 
 void CGaussianCalculator::HandleBtnRowEchelon(HWND _hDlg)
 {
-	CMatrix<3, 4> matResult = GetMatrix(_hDlg);
-	CMatrix<3, 4>::RowEchleonForm(matResult);
+ 	CMatrix<3, 4> matResult = GetMatrix(_hDlg);
+	CMatrix<3, 4>::RowEchleonFormStep(matResult, m_szCurPivotRow, m_szCurPivotCol, m_iCurEliminationDir);
 
 	SetMatrixBoxes(_hDlg, matResult);
 }

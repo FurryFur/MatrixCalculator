@@ -23,6 +23,9 @@ public:
 private:
 	CMatrix<3, 4> GetMatrix(HWND _hDlg);
 	void SetMatrixBoxes(HWND _hDlg, const CMatrix<3, 4>&);
+	size_t m_szCurPivotRow;
+	size_t m_szCurPivotCol;
+	int m_iCurEliminationDir;
 
 	const std::array<std::array<size_t, 4>, 3> m_k2darrMatrixBoxes;
 	const std::array<size_t, 2> m_karrMultiplyRowBoxes;

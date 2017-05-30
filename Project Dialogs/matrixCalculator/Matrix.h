@@ -58,11 +58,19 @@ public:
 		typename = std::enable_if_t<(_szRows == _szCols)> >
 	static CMatrix<szRows, szCols>& Scale(const CMatrix<szRows - 1, 1>& vec, CMatrix<szRows, szCols>& _rResult);
 
+	template <size_t szRows2 = szRows, size_t szCols2 = szCols,
+		typename = std::enable_if_t<(szRows2 == szCols2 && szRows2 <= 4)> >
+		static CMatrix<szRows, szCols>& Translate(const CMatrix<szRows, 1>& vec, CMatrix<szRows, szCols>& _rResult);
+
+	template <size_t szRows2 = szRows, size_t szCols2 = szCols,
+		typename = std::enable_if_t<(szRows2 == szCols2 && szRows2 <= 4)> >
+		static CMatrix<szRows, szCols>& Translate(const CMatrix<szRows - 1, 1>& vec, CMatrix<szRows, szCols>& _rResult);
+
 	// Methods for Gaussian Elimination
 	void MultiplyRow(size_t _szRow, float _fScalar);
 	void SwapRow(size_t _szRow1, size_t _szRow2);
 	void AddMultipleOfRowToRow(float _fScalar, size_t _szRowSrc, size_t _szRowDst);
-	static void RowEchleonForm(CMatrix& _rmat);
+	static void RowEchleonFormStep(CMatrix<szRows, szCols> & _rmat, size_t &_rszPivotRow, size_t &_rszPivotCol, int & _riEliminationDir);
 
 private:
 	std::array<std::array<float, szCols>, szRows> m_arrfMatrix;
@@ -384,6 +392,58 @@ inline CMatrix<szRows, szCols>& CMatrix<szRows, szCols>::Scale(const CMatrix<szR
 	return _rResult;
 }
 
+template <size_t szRows, size_t szCols>
+template <size_t szRows2, size_t szCols2, typename>
+inline CMatrix<szRows, szCols>& CMatrix<szRows, szCols>::Translate(const CMatrix<szRows, 1>& vec, CMatrix<szRows, szCols>& _rResult)
+{
+	for (int r = 0; r < szRows; ++r)
+	{
+		for (int c = 0; c < szCols; ++c)
+		{
+			if (r == (szRows - 1))
+			{
+				_rResult.m_arrfMatrix[r][c] = vec.GetElement(r, 0);
+			}
+			else if (r == c)
+			{
+				_rResult.m_arrfMatrix[r][c] = 1;
+			}
+			else
+			{
+				_rResult.m_arrfMatrix[r][c] = 0;
+			}
+		}
+	}
+
+	return _rResult;
+}
+
+template <size_t szRows, size_t szCols>
+template <size_t szRows2, size_t szCols2, typename>
+inline CMatrix<szRows, szCols>& CMatrix<szRows, szCols>::Translate(const CMatrix<szRows - 1, 1>& vec3, CMatrix<szRows, szCols>& _rResult)
+{
+	for (int r = 0; r < szRows; ++r)
+	{
+		for (int c = 0; c < szCols; ++c)
+		{
+			if (r == c)
+			{
+				_rResult.m_arrfMatrix[r][c] = 1;
+			}
+			else if (c == (szCols - 1))
+			{
+				_rResult.m_arrfMatrix[r][c] = vec3.GetElement(r, 0);
+			}
+			else
+			{
+				_rResult.m_arrfMatrix[r][c] = 0;
+			}
+		}
+	}
+
+	return _rResult;
+}
+
 template<size_t szRows, size_t szCols>
 inline void CMatrix<szRows, szCols>::MultiplyRow(size_t _szRow, float _fScalar)
 {
@@ -411,48 +471,73 @@ inline void CMatrix<szRows, szCols>::AddMultipleOfRowToRow(float _fScalar, size_
 }
 
 template<size_t szRows, size_t szCols>
-inline void CMatrix<szRows, szCols>::RowEchleonForm(CMatrix<szRows, szCols> & _rmat)
+inline void CMatrix<szRows, szCols>::RowEchleonFormStep(CMatrix<szRows, szCols> & _rmat, size_t & _rszPivotRow, size_t & _rszPivotCol, int & _riEliminationDir)
 {
-	size_t szPivotRow = 0;
-	for (size_t szPivotCol = 0; (szPivotRow < szRows) && (szPivotCol < szCols); ++szPivotCol)
+	// Check if we are still doing the guassian elimination
+	if ((_rszPivotRow <= 0 && _riEliminationDir == -1) 
+	 || (_rszPivotCol <= 0 && _riEliminationDir == -1))
+	{
+		return;
+	}
+
+	while ((_rszPivotRow < szRows) && (_rszPivotCol < szCols))
 	{
 		// Find the k-th pivot
-		size_t szMaxPivotRow = szPivotRow;
-		for (size_t szCurRow = szPivotRow + 1; szCurRow < szRows; ++szCurRow)
+		if (_riEliminationDir == 1 && _rmat.m_arrfMatrix[_rszPivotRow][_rszPivotCol] == 0)
 		{
-			if (_rmat.m_arrfMatrix[szCurRow][szPivotCol] > _rmat.m_arrfMatrix[szMaxPivotRow][szPivotCol])
+			size_t szRowFirstNonZero = _rszPivotRow;
+			for (size_t szCurRow = _rszPivotRow + 1; szCurRow < szRows; ++szCurRow)
 			{
-				szMaxPivotRow = szCurRow;
+				if (_rmat.m_arrfMatrix[szRowFirstNonZero][_rszPivotCol] != 0)
+				{
+					szRowFirstNonZero = szCurRow;
+					break;
+				}
 			}
-		}
-		if (szPivotRow != szMaxPivotRow)
-		{
-			_rmat.SwapRow(szPivotRow, szMaxPivotRow);
+			if (_rszPivotRow != szRowFirstNonZero)
+			{
+				_rmat.SwapRow(_rszPivotRow, szRowFirstNonZero);
+				break;
+			}
 		}
 
 		// Handle column of zeros
-		if (_rmat.m_arrfMatrix[szPivotRow][szPivotCol] == 0)
+		if (_rmat.m_arrfMatrix[_rszPivotRow][_rszPivotCol] == 0)
 		{
+			_rszPivotCol += _riEliminationDir;
 			continue;
 		}
 		// Normal case: Do Gaussian Elimination steps
 		else
 		{
-			for (size_t szCurRow = szPivotRow + 1; szCurRow < szRows; ++szCurRow)
+			for (size_t szCurRow = _rszPivotRow + _riEliminationDir; szCurRow < szRows; szCurRow += _riEliminationDir)
 			{
-				float fFactor = -(_rmat.m_arrfMatrix[szCurRow][szPivotCol] / _rmat.m_arrfMatrix[szPivotRow][szPivotCol]);
-				for (size_t szCurCol = szPivotCol + 1; szCurCol < szCols; ++szCurCol)
+				float fFactor = -(_rmat.m_arrfMatrix[szCurRow][_rszPivotCol] / _rmat.m_arrfMatrix[_rszPivotRow][_rszPivotCol]);
+				for (size_t szCurCol = _rszPivotCol + _riEliminationDir; szCurCol < szCols; ++szCurCol)
 				{
-					_rmat.m_arrfMatrix[szCurRow][szCurCol] += fFactor * _rmat.m_arrfMatrix[szPivotRow][szCurCol];
+					_rmat.m_arrfMatrix[szCurRow][szCurCol] += fFactor * _rmat.m_arrfMatrix[_rszPivotRow][szCurCol];
 				}
 
-				// Fill lower triangular part of matrix with zeros
-				_rmat.m_arrfMatrix[szCurRow][szPivotCol] = 0;
+				// Fill triangular part of matrix with zeros
+				_rmat.m_arrfMatrix[szCurRow][_rszPivotCol] = 0;
 			}
 
-
-			++szPivotRow;
+			_rszPivotRow += _riEliminationDir;
+			break;
 		}
+	}
+	_rszPivotCol += _riEliminationDir;
+
+	// Check if we need to reverse direction and do reduced row echelon steps
+	if (_rszPivotRow >= szRows - 1)
+	{
+		_rszPivotRow = szRows - 1;
+		_riEliminationDir = -1;
+	}
+	if (_rszPivotCol >= szCols - 1)
+	{
+		_rszPivotCol = szCols - 1;
+		_riEliminationDir = -1;
 	}
 }
 
