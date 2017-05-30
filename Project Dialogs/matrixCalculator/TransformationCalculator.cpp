@@ -160,26 +160,26 @@ void CTransformationCalculator::TranslationTransformation(HWND _hDlg, float _fX,
 
 void CTransformationCalculator::RotationTransformation(HWND _hDlg, float _fX, float _fY, float _fZ, float _fAngle) {
 	//normalize the points
-	if ((sqrt(pow(_fX, 2.0) + pow(_fY, 2.0) + pow(_fZ, 2.0) != 0)))
+	if ((sqrtf(powf(_fX, 2.0f) + powf(_fY, 2.0f) + powf(_fZ, 2.0f) != 0)))
 	{
-		float _fnX = _fX / (sqrt(pow(_fX, 2.0) + pow(_fY, 2.0) + pow(_fZ, 2.0)));
-		float _fnY = _fY / (sqrt(pow(_fX, 2.0) + pow(_fY, 2.0) + pow(_fZ, 2.0)));
-		float _fnZ = _fZ / (sqrt(pow(_fX, 2.0) + pow(_fY, 2.0) + pow(_fZ, 2.0)));
+		float _fnX = _fX / (sqrtf(powf(_fX, 2.0f) + powf(_fY, 2.0f) + powf(_fZ, 2.0f)));
+		float _fnY = _fY / (sqrtf(powf(_fX, 2.0f) + powf(_fY, 2.0f) + powf(_fZ, 2.0f)));
+		float _fnZ = _fZ / (sqrtf(powf(_fX, 2.0f) + powf(_fY, 2.0f) + powf(_fZ, 2.0f)));
 
 		//create rotation matrix
 		CMatrix4 rotationMatrix;
 
-		rotationMatrix.SetElement(0, 0, (pow(_fnX, 2.0) * (1 - cos(_fAngle)) + cos(_fAngle)));
-		rotationMatrix.SetElement(0, 1, (_fnX * _fnY * (1 - cos(_fAngle)) + _fnZ * sin(_fAngle)));
-		rotationMatrix.SetElement(0, 2, (_fnX * _fnZ * (1 - cos(_fAngle)) - _fnY * sin(_fAngle)));
+		rotationMatrix.SetElement(0, 0, (powf(_fnX, 2.0f) * (1 - cosf(_fAngle)) + cosf(_fAngle)));
+		rotationMatrix.SetElement(0, 1, (_fnX * _fnY * (1 - cosf(_fAngle)) + _fnZ * sinf(_fAngle)));
+		rotationMatrix.SetElement(0, 2, (_fnX * _fnZ * (1 - cosf(_fAngle)) - _fnY * sinf(_fAngle)));
 
-		rotationMatrix.SetElement(1, 0, (_fnX * _fnY * (1 - cos(_fAngle)) - _fnZ * sin(_fAngle)));
-		rotationMatrix.SetElement(1, 1, (pow(_fnY, 2.0) * (1 - cos(_fAngle)) + cos(_fAngle)));
-		rotationMatrix.SetElement(1, 2, (_fnY * _fnZ * (1 - cos(_fAngle)) + _fnX * sin(_fAngle)));
+		rotationMatrix.SetElement(1, 0, (_fnX * _fnY * (1 - cosf(_fAngle)) - _fnZ * sinf(_fAngle)));
+		rotationMatrix.SetElement(1, 1, (powf(_fnY, 2.0f) * (1 - cosf(_fAngle)) + cosf(_fAngle)));
+		rotationMatrix.SetElement(1, 2, (_fnY * _fnZ * (1 - cosf(_fAngle)) + _fnX * sinf(_fAngle)));
 
-		rotationMatrix.SetElement(2, 0, (_fnX * _fnZ * (1 - cos(_fAngle)) + _fnY * sin(_fAngle)));
-		rotationMatrix.SetElement(2, 1, (_fnY * _fnZ * (1 - cos(_fAngle)) - _fnX * sin(_fAngle)));
-		rotationMatrix.SetElement(2, 2, (pow(_fnZ, 2.0) * (1 - cos(_fAngle)) + cos(_fAngle)));
+		rotationMatrix.SetElement(2, 0, (_fnX * _fnZ * (1 - cosf(_fAngle)) + _fnY * sinf(_fAngle)));
+		rotationMatrix.SetElement(2, 1, (_fnY * _fnZ * (1 - cosf(_fAngle)) - _fnX * sinf(_fAngle)));
+		rotationMatrix.SetElement(2, 2, (powf(_fnZ, 2.0f) * (1 - cos(_fAngle)) + cosf(_fAngle)));
 
 		rotationMatrix.SetElement(0, 3, 0);
 		rotationMatrix.SetElement(1, 3, 0);
@@ -216,26 +216,26 @@ void CTransformationCalculator::RotationTransformation(HWND _hDlg, float _fX, fl
 
 void CTransformationCalculator::ReflectionTransformation(HWND _hDlg, float _fX, float _fY, float _fZ) {
 	//normalize the points
-	if ((sqrt(pow(_fX, 2.0) + pow(_fY, 2.0) + pow(_fZ, 2.0) != 0)))
+	if ((sqrtf(powf(_fX, 2.0f) + powf(_fY, 2.0f) + powf(_fZ, 2.0f) != 0)))
 	{
-		float _fnX = _fX / (sqrt(pow(_fX, 2.0) + pow(_fY, 2.0) + pow(_fZ, 2.0)));
-		float _fnY = _fY / (sqrt(pow(_fX, 2.0) + pow(_fY, 2.0) + pow(_fZ, 2.0)));
-		float _fnZ = _fZ / (sqrt(pow(_fX, 2.0) + pow(_fY, 2.0) + pow(_fZ, 2.0)));
-
+		float _fnX = _fX / (sqrtf(powf(_fX, 2.0f) + powf(_fY, 2.0f) + powf(_fZ, 2.0f)));
+		float _fnY = _fY / (sqrtf(powf(_fX, 2.0f) + powf(_fY, 2.0f) + powf(_fZ, 2.0f)));
+		float _fnZ = _fZ / (sqrtf(powf(_fX, 2.0f) + powf(_fY, 2.0f) + powf(_fZ, 2.0f)));
+											 
 		//create rotation matrix
 		CMatrix4 reflectionMatrix;
 
-		reflectionMatrix.SetElement(0, 0, (1 - (2 * pow(_fnX, 2.0))));
+		reflectionMatrix.SetElement(0, 0, (1 - (2 * powf(_fnX, 2.0f))));
 		reflectionMatrix.SetElement(0, 1, (-2 * _fnX * _fnY));
 		reflectionMatrix.SetElement(0, 2, (-2 * _fnX * _fnZ));
 
 		reflectionMatrix.SetElement(1, 0, (-2 * _fnX * _fnY));
-		reflectionMatrix.SetElement(1, 1, (1 - (2 * pow(_fnY, 2.0))));
+		reflectionMatrix.SetElement(1, 1, (1 - (2 * powf(_fnY, 2.0f))));
 		reflectionMatrix.SetElement(1, 2, (-2 * _fnY * _fnZ));
 
 		reflectionMatrix.SetElement(2, 0, (-2 * _fnX * _fnZ));
 		reflectionMatrix.SetElement(2, 1, (-2 * _fnY * _fnZ));
-		reflectionMatrix.SetElement(2, 2, (1 - (2 * pow(_fnZ, 2.0))));
+		reflectionMatrix.SetElement(2, 2, (1 - (2 * powf(_fnZ, 2.0f))));
 
 		reflectionMatrix.SetElement(0, 3, 0);
 		reflectionMatrix.SetElement(1, 3, 0);
@@ -271,7 +271,7 @@ void CTransformationCalculator::ReflectionTransformation(HWND _hDlg, float _fX, 
 }
 
 void CTransformationCalculator::ProjectionTransformation(HWND _hDlg, float _fX, float _fY, float _fZ, float _fDistance) {
-	if ((sqrt(pow(_fX, 2.0) + pow(_fY, 2.0) + pow(_fZ, 2.0) != 0)))
+	if ((sqrtf(powf(_fX, 2.0f) + powf(_fY, 2.0f) + powf(_fZ, 2.0f) != 0)))
 	{
 		CMatrix4 projectionMatrix;
 
@@ -297,9 +297,9 @@ void CTransformationCalculator::ProjectionTransformation(HWND _hDlg, float _fX, 
 			}
 		}
 
-		float _fnX = _fX / (sqrt(pow(_fX, 2.0) + pow(_fY, 2.0) + pow(_fZ, 2.0)));
-		float _fnY = _fY / (sqrt(pow(_fX, 2.0) + pow(_fY, 2.0) + pow(_fZ, 2.0)));
-		float _fnZ = _fZ / (sqrt(pow(_fX, 2.0) + pow(_fY, 2.0) + pow(_fZ, 2.0)));
+		float _fnX = _fX / (sqrtf(powf(_fX, 2.0f) + powf(_fY, 2.0f) + powf(_fZ, 2.0f)));
+		float _fnY = _fY / (sqrtf(powf(_fX, 2.0f) + powf(_fY, 2.0f) + powf(_fZ, 2.0f)));
+		float _fnZ = _fZ / (sqrtf(powf(_fX, 2.0f) + powf(_fY, 2.0f) + powf(_fZ, 2.0f)));
 
 		rotationMatrix.SetElement(2, 0, _fnX);
 		rotationMatrix.SetElement(2, 1, _fnY);
