@@ -4,13 +4,14 @@
 // Auckland
 // New Zealand
 //
-// (c) 2016 Media Design School
+// (c) 2017 Media Design School
 //
-// File Name	: 
-// Description	: 
+// File Name	: MatrixCalculator.pp
+// Description	: Handles all the maths during the Matrix calculator window
 // Author		: Jack Mair : Lance Chaney
 // Mail			: jack.mair@mediadesign.school.nz : lance.chaney@mediadesign.school.nz
 //
+
 #include "MatrixCalculator.h"
 #include "utils.h"
 #include "resource.h"
@@ -74,32 +75,32 @@ CMatrixCalculator::~CMatrixCalculator()
 {
 }
 
-size_t CMatrixCalculator::GetMatrixBoxA(size_t _szRows, size_t _szColumns)
+size_t CMatrixCalculator::GetMatrixBoxA(const size_t& _szRows, const size_t& _szColumns)
 {
 	return m_aMatrixABoxes[_szRows][_szColumns];
 }
 
-size_t CMatrixCalculator::GetMatrixBoxB(size_t _szRows, size_t _szColumns)
+size_t CMatrixCalculator::GetMatrixBoxB(const size_t& _szRows, const size_t& _szColumns)
 {
 	return m_aMatrixBBoxes[_szRows][_szColumns];
 }
 
-size_t CMatrixCalculator::GetMatrixBoxR(size_t _szRows, size_t _szColumns)
+size_t CMatrixCalculator::GetMatrixBoxR(const size_t& _szRows, const size_t& _szColumns)
 {
 	return m_aMatrixRBoxes[_szRows][_szColumns];
 }
 
-void CMatrixCalculator::SetMatrixBoxA(HWND _hDlg, float _fValue, size_t _szRows, size_t _szColumns)
+void CMatrixCalculator::SetMatrixBoxA(HWND _hDlg, const float& _fValue, const size_t& _szRows, const size_t& _szColumns)
 {
 	WriteToEditBox(_hDlg, GetMatrixBoxA(_szRows, _szColumns), _fValue);
 }
 
-void CMatrixCalculator::SetMatrixBoxB(HWND _hDlg, float _fValue, size_t _szRows, size_t _szColumns)
+void CMatrixCalculator::SetMatrixBoxB(HWND _hDlg, const float& _fValue, const size_t& _szRows, const size_t& _szColumns)
 {
 	WriteToEditBox(_hDlg, GetMatrixBoxB(_szRows, _szColumns), _fValue);
 }
 
-void CMatrixCalculator::SetMatrixBoxR(HWND _hDlg, float _fValue, size_t _szRows, size_t _szColumns)
+void CMatrixCalculator::SetMatrixBoxR(HWND _hDlg, const float& _fValue, const size_t& _szRows, const size_t& _szColumns)
 {
 	WriteToEditBox(_hDlg, GetMatrixBoxR(_szRows, _szColumns), _fValue);
 }
@@ -254,7 +255,7 @@ void CMatrixCalculator::TransposeB(HWND _hDlg)
 	}
 }
 
-void  CMatrixCalculator::ScalarMultiplyA(HWND _hDlg, float _fScalar) {
+void  CMatrixCalculator::ScalarMultiplyA(HWND _hDlg, const float& _fScalar) {
 	for (size_t i = 0; i < 4; ++i)
 	{
 		for (size_t j = 0; j < 4; ++j)
@@ -265,7 +266,7 @@ void  CMatrixCalculator::ScalarMultiplyA(HWND _hDlg, float _fScalar) {
 	}
 }
 
-void  CMatrixCalculator::ScalarMultiplyB(HWND _hDlg, float _fScalar) {
+void  CMatrixCalculator::ScalarMultiplyB(HWND _hDlg, const float& _fScalar) {
 	for (size_t i = 0; i < 4; ++i)
 	{
 		for (size_t j = 0; j < 4; ++j)

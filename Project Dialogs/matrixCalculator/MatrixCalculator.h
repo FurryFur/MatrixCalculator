@@ -4,10 +4,10 @@
 // Auckland
 // New Zealand
 //
-// (c) 2016 Media Design School
+// (c) 2017 Media Design School
 //
-// File Name	: 
-// Description	: 
+// File Name	: MatrixCalculator.h
+// Description	: Header file for MatrixCalculator.cpp. Handles all the maths during the Matrix calculator window
 // Author		: Jack Mair : Lance Chaney
 // Mail			: jack.mair@mediadesign.school.nz : lance.chaney@mediadesign.school.nz
 //
@@ -37,8 +37,8 @@ public:
 	void TransposeA(HWND _hDlg);
 	void TransposeB(HWND _hDlg);
 
-	void ScalarMultiplyA(HWND _hDlg, float _fScalar);
-	void ScalarMultiplyB(HWND _hDlg, float _fScalar);
+	void ScalarMultiplyA(HWND _hDlg, const float& _fScalar);
+	void ScalarMultiplyB(HWND _hDlg, const float& _fScalar);
 
 	void AddMatrices(HWND _hDlg);
 	void SubtractMatrices(HWND _hDlg);
@@ -47,12 +47,12 @@ public:
 	void MultiplyBA(HWND _hDlg);
 
 private:
-	void SetMatrixBoxA(HWND _hDlg, float _fValue, size_t _szRows, size_t _szColumns);
-	void SetMatrixBoxB(HWND _hDlg, float _fValue, size_t _szRows, size_t _szColumns);
-	void SetMatrixBoxR(HWND _hDlg, float _fValue, size_t _szRows, size_t _szColumns);
-	size_t GetMatrixBoxA(size_t _szRows, size_t _szColumns);
-	size_t GetMatrixBoxB(size_t _szRows, size_t _szColumns);
-	size_t GetMatrixBoxR(size_t _szRows, size_t _szColumns);
+	void SetMatrixBoxA(HWND _hDlg, const float& _fValue, const size_t& _szRows, const size_t& _szColumns);
+	void SetMatrixBoxB(HWND _hDlg, const float& _fValue, const size_t& _szRows, const size_t& _szColumns);
+	void SetMatrixBoxR(HWND _hDlg, const float& _fValue, const size_t& _szRows, const size_t& _szColumns);
+	size_t GetMatrixBoxA(const size_t& _szRows, const size_t& _szColumns);
+	size_t GetMatrixBoxB(const size_t& _szRows, const size_t& _szColumns);
+	size_t GetMatrixBoxR(const size_t& _szRows, const size_t& _szColumns);
 
 	size_t m_aMatrixABoxes[4][4];
 	size_t m_aMatrixBBoxes[4][4];

@@ -4,10 +4,10 @@
 // Auckland
 // New Zealand
 //
-// (c) 2016 Media Design School
+// (c) 2017 Media Design School
 //
-// File Name	: 
-// Description	: 
+// File Name	: TransformationCalculator.cpp
+// Description	: Handles all the maths during the transformation matrix window
 // Author		: Jack Mair : Lance Chaney
 // Mail			: jack.mair@mediadesign.school.nz : lance.chaney@mediadesign.school.nz
 //
@@ -61,17 +61,17 @@ CTransformationCalculator::~CTransformationCalculator()
 {
 }
 
-size_t CTransformationCalculator::GetColMatrixBox(size_t _szRows, size_t _szColumns)
+size_t CTransformationCalculator::GetColMatrixBox(const size_t& _szRows, const size_t& _szColumns)
 {
 	return m_aColMatrixBoxes[_szRows][_szColumns];
 }
 
-size_t CTransformationCalculator::GetRowMatrixBox(size_t _szRows, size_t _szColumns)
+size_t CTransformationCalculator::GetRowMatrixBox(const size_t& _szRows, const size_t& _szColumns)
 {
 	return m_aRowMatrixBoxes[_szRows][_szColumns];
 }
 
-void CTransformationCalculator::SetMatrixBox(HWND _hDlg, float _fValue, size_t _szRows, size_t _szColumns)
+void CTransformationCalculator::SetMatrixBox(HWND _hDlg, const float& _fValue, const size_t& _szRows, const size_t& _szColumns)
 {
 	WriteToEditBox(_hDlg, GetColMatrixBox(_szRows, _szColumns), _fValue);
 
@@ -94,7 +94,7 @@ void CTransformationCalculator::HandleSetI(HWND _hDlg) {
 	}
 }
 
-void CTransformationCalculator::ScaleTransformation(HWND _hDlg, float _fX, float _fY, float _fZ) {
+void CTransformationCalculator::ScaleTransformation(HWND _hDlg, const float& _fX, const float& _fY, const float& _fZ) {
 	CVec3 scaleVector;
 	
 	scaleVector.SetElement(0, 0, _fX);
@@ -126,7 +126,7 @@ void CTransformationCalculator::ScaleTransformation(HWND _hDlg, float _fX, float
 
 }
 
-void CTransformationCalculator::TranslationTransformation(HWND _hDlg, float _fX, float _fY, float _fZ) {
+void CTransformationCalculator::TranslationTransformation(HWND _hDlg, const float& _fX, const float& _fY, const float& _fZ) {
 	CVec3 translationVector;
 
 	translationVector.SetElement(0, 0, _fX);
@@ -158,7 +158,7 @@ void CTransformationCalculator::TranslationTransformation(HWND _hDlg, float _fX,
 
 }
 
-void CTransformationCalculator::RotationTransformation(HWND _hDlg, float _fX, float _fY, float _fZ, float _fAngle) {
+void CTransformationCalculator::RotationTransformation(HWND _hDlg, const float& _fX, const float& _fY, const float& _fZ, const float& _fAngle) {
 	//normalize the points
 	if ((sqrtf(powf(_fX, 2.0f) + powf(_fY, 2.0f) + powf(_fZ, 2.0f) != 0)))
 	{
@@ -214,7 +214,7 @@ void CTransformationCalculator::RotationTransformation(HWND _hDlg, float _fX, fl
 	}
 }
 
-void CTransformationCalculator::ReflectionTransformation(HWND _hDlg, float _fX, float _fY, float _fZ) {
+void CTransformationCalculator::ReflectionTransformation(HWND _hDlg, const float& _fX, const float& _fY, const float& _fZ) {
 	//normalize the points
 	if ((sqrtf(powf(_fX, 2.0f) + powf(_fY, 2.0f) + powf(_fZ, 2.0f) != 0)))
 	{
@@ -275,7 +275,7 @@ void CTransformationCalculator::ReflectionTransformation(HWND _hDlg, float _fX, 
 	}
 }
 
-void CTransformationCalculator::ProjectionTransformation(HWND _hDlg, float _fX, float _fY, float _fZ, float _fDistance) {
+void CTransformationCalculator::ProjectionTransformation(HWND _hDlg, const float& _fX, const float& _fY, const float& _fZ, const float& _fDistance) {
 	if ((sqrtf(powf(_fX, 2.0f) + powf(_fY, 2.0f) + powf(_fZ, 2.0f) != 0)))
 	{
 		CMatrix4 projectionMatrix;
