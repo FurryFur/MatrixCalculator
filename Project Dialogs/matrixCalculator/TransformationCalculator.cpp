@@ -264,6 +264,11 @@ void CTransformationCalculator::ReflectionTransformation(HWND _hDlg, float _fX, 
 		{
 			for (size_t j = 0; j < 4; ++j)
 			{
+				//if really close to zero make zero. 
+				if (resultmatrix.GetElement(i, j) <= 0.0005f && resultmatrix.GetElement(i, j) >= -0.0005f)
+				{
+					resultmatrix.SetElement(i, j, 0);
+				}
 				SetMatrixBox(_hDlg, resultmatrix.GetElement(i, j), i, j);
 			}
 		}
