@@ -23,6 +23,7 @@
 #include "MatrixCalculator.h"
 #include "TransformationCalculator.h"
 #include "QuaternionCalculator.h"
+#include "SlerpCalculator.h"
 
 #define WINDOW_CLASS_NAME L"WINCLASS1"
 
@@ -457,9 +458,25 @@ BOOL CALLBACK SLERPDlgProc(HWND _hwnd,
 	WPARAM _wparam,
 	LPARAM _lparam)
 {
+	static CSlerpCalculator s_slerpCalculator;
 
 	switch (_msg)
 	{
+	case WM_COMMAND:
+	{
+		switch (LOWORD(_wparam))
+		{
+		case IDC_BUTTON1:
+		{
+			s_slerpCalculator.HandleBtnASlerpB(_hwnd);
+			break;
+		}
+		default:
+			break;
+		}
+		return TRUE;
+		break;
+	}
 	case WM_CLOSE:
 	{
 		ShowWindow(_hwnd, SW_HIDE);

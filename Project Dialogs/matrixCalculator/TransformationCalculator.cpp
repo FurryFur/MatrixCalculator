@@ -11,12 +11,13 @@
 // Author		: Jack Mair : Lance Chaney
 // Mail			: jack.mair@mediadesign.school.nz : lance.chaney@mediadesign.school.nz
 //
+
+#include <math.h>
+
 #include "TransformationCalculator.h"
 #include "utils.h"
 #include "resource.h"
 #include "Matrix.h"
-
-#include <math.h>
 
 CTransformationCalculator::CTransformationCalculator()
 {
