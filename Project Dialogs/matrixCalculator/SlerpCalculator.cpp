@@ -19,7 +19,7 @@
 #include "resource.h"
 
 
-CSlerpCalculator::CSlerpCalculator() :
+CSlerpCalculator::CSlerpCalculator(HWND _hDlg) :
 	m_karrQuatABoxes{
 		IDC_EDIT1,     // The real component is placed in the last edit box
 		IDC_EDIT2,
@@ -40,6 +40,23 @@ CSlerpCalculator::CSlerpCalculator() :
 	},
 	m_kszScalarTBox(IDC_EDIT9)
 {
+	m_hDlg = _hDlg;
+	m_aRMatrixBoxes[0][0] = IDC_EDIT34;
+	m_aRMatrixBoxes[0][1] = IDC_EDIT35;
+	m_aRMatrixBoxes[0][2] = IDC_EDIT36;
+	m_aRMatrixBoxes[0][3] = IDC_EDIT37;
+	m_aRMatrixBoxes[1][0] = IDC_EDIT38;
+	m_aRMatrixBoxes[1][1] = IDC_EDIT39;
+	m_aRMatrixBoxes[1][2] = IDC_EDIT40;
+	m_aRMatrixBoxes[1][3] = IDC_EDIT41;
+	m_aRMatrixBoxes[2][0] = IDC_EDIT42;
+	m_aRMatrixBoxes[2][1] = IDC_EDIT43;
+	m_aRMatrixBoxes[2][2] = IDC_EDIT44;
+	m_aRMatrixBoxes[2][3] = IDC_EDIT45;
+	m_aRMatrixBoxes[3][0] = IDC_EDIT46;
+	m_aRMatrixBoxes[3][1] = IDC_EDIT47;
+	m_aRMatrixBoxes[3][2] = IDC_EDIT48;
+	m_aRMatrixBoxes[3][3] = IDC_EDIT49;
 }
 
 
@@ -47,36 +64,75 @@ CSlerpCalculator::~CSlerpCalculator()
 {
 }
 
-void CSlerpCalculator::HandleBtnASlerpB(HWND _hDlg) {
-	CQuaternion qA = GetQuaternionA(_hDlg);
-	CQuaternion qB = GetQuaternionB(_hDlg);
+void CSlerpCalculator::HandleBtnASlerpB() {
+	CQuaternion qA = GetQuaternionA();
+	CQuaternion qB = GetQuaternionB();
 	float _fAngle = acosf((qA.Dot(qB)) / (qA.Magnitude() * qB.Magnitude()));
-	SetAnswerBox(_hDlg, ((((sinf((1 - m_kszScalarTBox) * _fAngle)) / (sinf(_fAngle))) * qA) + (((sinf(m_kszScalarTBox * _fAngle)) / (sinf(_fAngle))) * qB)));
+	SetAnswerBox(((((sinf((1 - m_kszScalarTBox) * _fAngle)) / (sinf(_fAngle))) * qA) + (((sinf(m_kszScalarTBox * _fAngle)) / (sinf(_fAngle))) * qB)));
 }
 
-CQuaternion CSlerpCalculator::GetQuaternionA(HWND _hDlg)
+CQuaternion CSlerpCalculator::GetQuaternionA()
 {
-	float fW = ReadFromEditBox(_hDlg, m_karrQuatABoxes[0]);
-	float fI = ReadFromEditBox(_hDlg, m_karrQuatABoxes[1]);
-	float fJ = ReadFromEditBox(_hDlg, m_karrQuatABoxes[2]);
-	float fK = ReadFromEditBox(_hDlg, m_karrQuatABoxes[3]);
+	float fW = ReadFromEditBox(m_hDlg, m_karrQuatABoxes[0]);
+	float fI = ReadFromEditBox(m_hDlg, m_karrQuatABoxes[1]);
+	float fJ = ReadFromEditBox(m_hDlg, m_karrQuatABoxes[2]);
+	float fK = ReadFromEditBox(m_hDlg, m_karrQuatABoxes[3]);
 	return CQuaternion(fW, fI, fJ, fK);
 }
 
-CQuaternion CSlerpCalculator::GetQuaternionB(HWND _hDlg)
+CQuaternion CSlerpCalculator::GetQuaternionB()
 {
-	float fW = ReadFromEditBox(_hDlg, m_karrQuatBBoxes[0]);
-	float fI = ReadFromEditBox(_hDlg, m_karrQuatBBoxes[1]);
-	float fJ = ReadFromEditBox(_hDlg, m_karrQuatBBoxes[2]);
-	float fK = ReadFromEditBox(_hDlg, m_karrQuatBBoxes[3]);
+	float fW = ReadFromEditBox(m_hDlg, m_karrQuatBBoxes[0]);
+	float fI = ReadFromEditBox(m_hDlg, m_karrQuatBBoxes[1]);
+	float fJ = ReadFromEditBox(m_hDlg, m_karrQuatBBoxes[2]);
+	float fK = ReadFromEditBox(m_hDlg, m_karrQuatBBoxes[3]);
 	return CQuaternion(fW, fI, fJ, fK);
 }
 
-void CSlerpCalculator::SetAnswerBox(HWND _hDlg, const CQuaternion& _krqAnswer)
+void CSlerpCalculator::SetAnswerBox(const CQuaternion& _krqAnswer)
 {
 	for (size_t szIdx = 0; szIdx < 4; ++szIdx)
 	{
 		float fElement = _krqAnswer.GetElement(szIdx);
-		WriteToEditBox(_hDlg, m_karrQuatAnsBoxes.at(szIdx), fElement);
+		WriteToEditBox(m_hDlg, m_karrQuatAnsBoxes.at(szIdx), fElement);
 	}
+}
+
+std::array<size_t, 4> CSlerpCalculator::GetAQuaternion()
+{
+	return m_karrQuatABoxes;
+}
+
+std::array<size_t, 4> CSlerpCalculator::GetBQuaternion()
+{
+	return m_karrQuatBBoxes;
+}
+
+std::array<size_t, 4> CSlerpCalculator::GetRQuaternion()
+{
+	return m_karrQuatAnsBoxes;
+}
+
+
+void CSlerpCalculator::ConvertToMatrix(const std::array<size_t, 4> _karrQuatBoxes)
+{
+	WriteToEditBox(m_hDlg, m_aRMatrixBoxes[0][0], ReadFromEditBox(m_hDlg, _karrQuatBoxes[0]));
+	WriteToEditBox(m_hDlg, m_aRMatrixBoxes[0][1], ReadFromEditBox(m_hDlg, _karrQuatBoxes[1]));
+	WriteToEditBox(m_hDlg, m_aRMatrixBoxes[0][2], ReadFromEditBox(m_hDlg, _karrQuatBoxes[2]));
+	WriteToEditBox(m_hDlg, m_aRMatrixBoxes[0][3], ReadFromEditBox(m_hDlg, _karrQuatBoxes[3]));
+				   
+	WriteToEditBox(m_hDlg, m_aRMatrixBoxes[1][0], -(ReadFromEditBox(m_hDlg, _karrQuatBoxes[1])));
+	WriteToEditBox(m_hDlg, m_aRMatrixBoxes[1][1], ReadFromEditBox(m_hDlg, _karrQuatBoxes[0]));
+	WriteToEditBox(m_hDlg, m_aRMatrixBoxes[1][2], -(ReadFromEditBox(m_hDlg, _karrQuatBoxes[3])));
+	WriteToEditBox(m_hDlg, m_aRMatrixBoxes[1][3], ReadFromEditBox(m_hDlg, _karrQuatBoxes[2]));
+				   
+	WriteToEditBox(m_hDlg, m_aRMatrixBoxes[2][0], -(ReadFromEditBox(m_hDlg, _karrQuatBoxes[2])));
+	WriteToEditBox(m_hDlg, m_aRMatrixBoxes[2][1], ReadFromEditBox(m_hDlg, _karrQuatBoxes[3]));
+	WriteToEditBox(m_hDlg, m_aRMatrixBoxes[2][2], ReadFromEditBox(m_hDlg, _karrQuatBoxes[0]));
+	WriteToEditBox(m_hDlg, m_aRMatrixBoxes[2][3], -(ReadFromEditBox(m_hDlg, _karrQuatBoxes[1])));
+				   
+	WriteToEditBox(m_hDlg, m_aRMatrixBoxes[3][0], -(ReadFromEditBox(m_hDlg, _karrQuatBoxes[3])));
+	WriteToEditBox(m_hDlg, m_aRMatrixBoxes[3][1], -(ReadFromEditBox(m_hDlg, _karrQuatBoxes[2])));
+	WriteToEditBox(m_hDlg, m_aRMatrixBoxes[3][2], ReadFromEditBox(m_hDlg, _karrQuatBoxes[1]));
+	WriteToEditBox(m_hDlg, m_aRMatrixBoxes[3][3], ReadFromEditBox(m_hDlg, _karrQuatBoxes[0]));
 }

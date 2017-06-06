@@ -492,7 +492,7 @@ BOOL CALLBACK SLERPDlgProc(HWND _hwnd,
 	WPARAM _wparam,
 	LPARAM _lparam)
 {
-	static CSlerpCalculator s_slerpCalculator;
+	static CSlerpCalculator s_slerpCalculator(_hwnd);
 
 	switch (_msg)
 	{
@@ -502,7 +502,22 @@ BOOL CALLBACK SLERPDlgProc(HWND _hwnd,
 		{
 		case IDC_BUTTON1:
 		{
-			s_slerpCalculator.HandleBtnASlerpB(_hwnd);
+			s_slerpCalculator.HandleBtnASlerpB();
+			break;
+		}
+		case IDC_BUTTON2:
+		{
+			s_slerpCalculator.ConvertToMatrix(s_slerpCalculator.GetAQuaternion());
+			break;
+		}
+		case IDC_BUTTON3:
+		{
+			s_slerpCalculator.ConvertToMatrix(s_slerpCalculator.GetBQuaternion());
+			break;
+		}
+		case IDC_BUTTON4:
+		{
+			s_slerpCalculator.ConvertToMatrix(s_slerpCalculator.GetRQuaternion());
 			break;
 		}
 		default:
