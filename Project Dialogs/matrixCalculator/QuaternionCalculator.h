@@ -11,30 +11,32 @@
 class CQuaternionCalculator
 {
 public:
-	CQuaternionCalculator();
+	CQuaternionCalculator(HWND _hDlg);
 	~CQuaternionCalculator();
 
-	void HandleBtnAPlusB(HWND _hDlg);
-	void HandleBtnAMinusB(HWND _hDlg);
-	void HandleBtnBMinusA(HWND _hDlg);
-	void HandleBtnATimesB(HWND _hDlg);
-	void HandleBtnBTimesA(HWND _hDlg);
-	void HandleBtnADotB(HWND _hDlg);
-	void HandleBtnAConjugate(HWND _hDlg);
-	void HandleBtnBConjugate(HWND _hDlg);
-	void HandleBtnMagnitudeOfA(HWND _hDlg);
-	void HandleBtnMagnitudeOfB(HWND _hDlg);
-	void HandleBtnAInverse(HWND _hDlg);
-	void HandleBtnBInverse(HWND _hDlg);
-	void HandleBtnTTimesA(HWND _hDlg);
-	void HandleBtnTTimesB(HWND _hDlg);
+	void HandleBtnAPlusB();
+	void HandleBtnAMinusB();
+	void HandleBtnBMinusA();
+	void HandleBtnATimesB();
+	void HandleBtnBTimesA();
+	void HandleBtnADotB();
+	void HandleBtnAConjugate();
+	void HandleBtnBConjugate();
+	void HandleBtnMagnitudeOfA();
+	void HandleBtnMagnitudeOfB();
+	void HandleBtnAInverse();
+	void HandleBtnBInverse();
+	void HandleBtnTTimesA();
+	void HandleBtnTTimesB();
 
 private:
-	CQuaternion GetQuaternionA(HWND _hDlg);
-	CQuaternion GetQuaternionB(HWND _hDlg);
+	CQuaternion GetQuaternionA();
+	CQuaternion GetQuaternionB();
 
-	void SetAnswerBox(HWND _hDlg, const CQuaternion& _krqAnswer);
+	void SetAnswerBox(const CQuaternion& _krqAnswer);
 
+
+	HWND m_hDlg;
 	const std::array<size_t, 4> m_karrQuatABoxes;
 	const std::array<size_t, 4> m_karrQuatBBoxes;
 	const std::array<size_t, 4> m_karrQuatAnsBoxes;
