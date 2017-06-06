@@ -18,7 +18,7 @@ public:
 	void HandleBtnApplyRowMultiply(HWND _hDlg);
 	void HandleBtnApplyRowSwap(HWND _hDlg);
 	void HandleBtnApplyAddMultipleOfRowToRow(HWND _hDlg);
-	void HandleBtnRowEchelon(HWND _hDlg);
+	void HandleBtnGaussianElimStep(HWND _hDlg);
 
 private:
 	CMatrix<3, 4> GetMatrix(HWND _hDlg);

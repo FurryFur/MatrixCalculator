@@ -70,7 +70,12 @@ public:
 	void MultiplyRow(size_t _szRow, float _fScalar);
 	void SwapRow(size_t _szRow1, size_t _szRow2);
 	void AddMultipleOfRowToRow(float _fScalar, size_t _szRowSrc, size_t _szRowDst);
-	static void RowEchleonFormStep(CMatrix<szRows, szCols> & _rmat, size_t &_rszPivotRow, size_t &_rszPivotCol, int & _riEliminationDir);
+	static int GaussianElimStep(CMatrix<szRows, szCols> & _rmat);
+	// Notes: May result in row swap,
+	// Returns: Whether an unprocessed pivot was found
+	static bool GetPivot(CMatrix<szRows, szCols> & _rmat, size_t & _rszPivotRow, size_t & _rszPivotCol, int & _riEliminationDir, bool & _rbWasRowSwap);
+	static bool IsInReducedRowEchelonForm(const CMatrix<szRows, szCols> &_rmat);
+	static bool IsInEchelonForm(const CMatrix<szRows, szCols> &_rmat);
 
 private:
 	std::array<std::array<float, szCols>, szRows> m_arrfMatrix;
@@ -471,73 +476,268 @@ inline void CMatrix<szRows, szCols>::AddMultipleOfRowToRow(float _fScalar, size_
 }
 
 template<size_t szRows, size_t szCols>
-inline void CMatrix<szRows, szCols>::RowEchleonFormStep(CMatrix<szRows, szCols> & _rmat, size_t & _rszPivotRow, size_t & _rszPivotCol, int & _riEliminationDir)
+inline int CMatrix<szRows, szCols>::GaussianElimStep(CMatrix<szRows, szCols> & _rmat)
 {
-	// Check if we are still doing the guassian elimination
-	if ((_rszPivotRow <= 0 && _riEliminationDir == -1) 
-	 || (_rszPivotCol <= 0 && _riEliminationDir == -1))
-	{
-		return;
-	}
+	// Find the next pivot (must have non-zero entries below it, otherwise it has already been processed)
+	size_t szPivotRow;
+	size_t szPivotCol;
+	int iEliminationDir;
+	bool bWasRowSwap;
+	bool bPivotToProcess = GetPivot(_rmat, szPivotRow, szPivotCol, iEliminationDir, bWasRowSwap);
 
-	while ((_rszPivotRow < szRows) && (_rszPivotCol < szCols))
+	if (bPivotToProcess && !bWasRowSwap)
 	{
-		// Find the k-th pivot
-		if (_riEliminationDir == 1 && _rmat.m_arrfMatrix[_rszPivotRow][_rszPivotCol] == 0)
+		// Normalise pivot first if doing row reduced part
+		bool bNormalizedThisStep = false;
+		if (iEliminationDir == -1 && abs(_rmat.m_arrfMatrix[szPivotRow][szPivotCol] - 1) >= 0.000001)
 		{
-			size_t szRowFirstNonZero = _rszPivotRow;
-			for (size_t szCurRow = _rszPivotRow + 1; szCurRow < szRows; ++szCurRow)
+			float fFactor = 1 / _rmat.m_arrfMatrix[szPivotRow][szPivotCol];
+			for (size_t szCurCol = szPivotCol + 1; szCurCol < szCols; ++szCurCol)
 			{
-				if (_rmat.m_arrfMatrix[szRowFirstNonZero][_rszPivotCol] != 0)
+				_rmat.m_arrfMatrix[szPivotRow][szCurCol] *= fFactor;
+
+				// Zero out entries that are basically zero already
+				if (abs(_rmat.m_arrfMatrix[szPivotRow][szCurCol]) < 0.000001)
 				{
-					szRowFirstNonZero = szCurRow;
-					break;
+					_rmat.m_arrfMatrix[szPivotRow][szCurCol] = 0;
 				}
 			}
-			if (_rszPivotRow != szRowFirstNonZero)
+
+			// Make the pivot exactly 1
+			_rmat.m_arrfMatrix[szPivotRow][szPivotCol] = 1;
+
+			bNormalizedThisStep = true;
+		}
+
+		// Do Gaussian Elimination steps
+		if (!bNormalizedThisStep)
+		{
+			for (size_t szCurRow = szPivotRow + iEliminationDir; szCurRow < szRows && szCurRow >= 0; szCurRow += iEliminationDir)
 			{
-				_rmat.SwapRow(_rszPivotRow, szRowFirstNonZero);
+				float fFactor = -(_rmat.m_arrfMatrix[szCurRow][szPivotCol] / _rmat.m_arrfMatrix[szPivotRow][szPivotCol]);
+				for (size_t szCurCol = szPivotCol + 1; szCurCol < szCols; ++szCurCol)
+				{
+					_rmat.m_arrfMatrix[szCurRow][szCurCol] += fFactor * _rmat.m_arrfMatrix[szPivotRow][szCurCol];
+
+					// Zero out entries that are basically zero already
+					if (abs(_rmat.m_arrfMatrix[szCurRow][szCurCol]) < 0.000001)
+					{
+						_rmat.m_arrfMatrix[szCurRow][szCurCol] = 0;
+					}
+				}
+
+				// Fill triangular part of matrix with zeros
+				_rmat.m_arrfMatrix[szCurRow][szPivotCol] = 0;
+			}
+		}
+	}
+
+	return iEliminationDir;
+}
+
+template<size_t szRows, size_t szCols>
+inline bool CMatrix<szRows, szCols>::GetPivot(CMatrix<szRows, szCols>& _rmat, size_t & _rszPivotRow, size_t & _rszPivotCol, int & _riEliminationDir, bool & _rbWasRowSwap)
+{
+	_rszPivotRow = 0;
+	_rszPivotCol = 0;
+	_riEliminationDir = 1;
+	_rbWasRowSwap = false;
+
+	bool bFoundPivot = false;
+	size_t szLastValidPivotRow = -1;
+	size_t szLastValidPivotCol = -1;
+	
+	while (!bFoundPivot && (_rszPivotRow < szRows) && (_rszPivotCol < szCols) && (_rszPivotRow >= 0) && (_rszPivotCol >= 0))
+	{
+		// Find first non-zero pivot in column
+		size_t szRowFirstNonZero = _rszPivotRow;
+		for (size_t szCurRow = _rszPivotRow; szCurRow < szRows && szCurRow >= 0; szCurRow += _riEliminationDir)
+		{
+			if (_rmat.m_arrfMatrix[szCurRow][_rszPivotCol] != 0)
+			{
+				szRowFirstNonZero = szCurRow;
 				break;
 			}
 		}
 
-		// Handle column of zeros
-		if (_rmat.m_arrfMatrix[_rszPivotRow][_rszPivotCol] == 0)
+		// Move to next column if column contains no pivot
+		if (_rmat.m_arrfMatrix[szRowFirstNonZero][_rszPivotCol] == 0)
 		{
-			_rszPivotCol += _riEliminationDir;
+			// Swap elimination direction if we would go past the last column to find a pivot
+			if (_rszPivotCol + _riEliminationDir == szCols)
+			{
+				_riEliminationDir *= -1;
+				_rszPivotRow = szLastValidPivotRow;
+				_rszPivotCol = szLastValidPivotCol;
+			}
+			else
+			{
+				_rszPivotCol += _riEliminationDir;
+			}
 			continue;
 		}
-		// Normal case: Do Gaussian Elimination steps
+		// Save valid pivots
 		else
 		{
-			for (size_t szCurRow = _rszPivotRow + _riEliminationDir; szCurRow < szRows; szCurRow += _riEliminationDir)
-			{
-				float fFactor = -(_rmat.m_arrfMatrix[szCurRow][_rszPivotCol] / _rmat.m_arrfMatrix[_rszPivotRow][_rszPivotCol]);
-				for (size_t szCurCol = _rszPivotCol + _riEliminationDir; szCurCol < szCols; ++szCurCol)
-				{
-					_rmat.m_arrfMatrix[szCurRow][szCurCol] += fFactor * _rmat.m_arrfMatrix[_rszPivotRow][szCurCol];
-				}
+			// We need this when changing elimination directions so we start at the last valid pivot
+			szLastValidPivotRow = _rszPivotRow;
+			szLastValidPivotCol = _rszPivotCol;
+		}
 
-				// Fill triangular part of matrix with zeros
-				_rmat.m_arrfMatrix[szCurRow][_rszPivotCol] = 0;
-			}
-
-			_rszPivotRow += _riEliminationDir;
+		// If the pivot is in the wrong row, then swap the rows and break from the loop
+		if (_rszPivotRow != szRowFirstNonZero)
+		{
+			_rmat.SwapRow(_rszPivotRow, szRowFirstNonZero);
+			_rbWasRowSwap = true;
+			bFoundPivot = true;
 			break;
 		}
-	}
-	_rszPivotCol += _riEliminationDir;
 
-	// Check if we need to reverse direction and do reduced row echelon steps
-	if (_rszPivotRow >= szRows - 1)
-	{
-		_rszPivotRow = szRows - 1;
-		_riEliminationDir = -1;
+		// Still need to process the column if doing row reduction steps and the pivot is not 1
+		bool bColumnStillNeedsProcessing = false;
+		if (_riEliminationDir == -1 && abs(_rmat.m_arrfMatrix[_rszPivotRow][_rszPivotCol] - 1) >= 0.000001)
+		{
+			bColumnStillNeedsProcessing = true;
+		}
+		else
+		{
+			// Move to next row and column if remainder of column contains only zeros
+			for (size_t szCurRow = _rszPivotRow + _riEliminationDir; szCurRow < szRows && szCurRow >= 0; szCurRow += _riEliminationDir)
+			{
+				if (_rmat.m_arrfMatrix[szCurRow][_rszPivotCol] != 0)
+				{
+					bColumnStillNeedsProcessing = true;
+					break;
+				}
+			}
+		}
+		if (!bColumnStillNeedsProcessing)
+		{
+			// Swap elimination direction if we would go past the last row or column to find a pivot
+			if (_rszPivotRow + _riEliminationDir == szRows || _rszPivotCol + _riEliminationDir == szCols)
+			{
+				_riEliminationDir *= -1;
+				_rszPivotRow = szLastValidPivotRow;
+				_rszPivotCol = szLastValidPivotCol;
+			}
+			else 
+			{
+				_rszPivotRow += _riEliminationDir;
+				_rszPivotCol += _riEliminationDir;
+			}
+			
+			continue;
+		}
+
+		bFoundPivot = true;
 	}
-	if (_rszPivotCol >= szCols - 1)
+
+	return bFoundPivot;
+}
+
+template<size_t szRows, size_t szCols>
+inline bool CMatrix<szRows, szCols>::IsInReducedRowEchelonForm(const CMatrix<szRows, szCols>& _rmat)
+{
+	size_t szPivotRow = 0;
+	size_t szPivotCol = 0;
+
+	while ((szPivotRow < szRows) && (szPivotCol < szCols))
 	{
-		_rszPivotCol = szCols - 1;
-		_riEliminationDir = -1;
+		// Find pivot row in this column
+		for (size_t szCurRow = szPivotRow; szCurRow < szRows; ++szCurRow)
+		{
+			if (_rmat.m_arrfMatrix[szCurRow][szPivotCol] != 0)
+			{
+				szPivotRow = szCurRow;
+				break;
+			}
+		}
+
+		// Move to next column if column contains no pivot
+		if (_rmat.m_arrfMatrix[szPivotRow][szPivotCol] == 0)
+		{
+			++szPivotCol;
+			continue;
+		}
+
+		// Check that the pivots are 1
+		bool bPivotsAreNormalized = abs(_rmat.m_arrfMatrix[szPivotRow][szPivotCol] - 1) < 0.000001f;
+
+		// Check that there are no entries above pivot
+		bool bEntriesAbove = false;
+		for (size_t r = szPivotRow - 1; r >= 0 && r < szRows; --r)
+		{
+			if (abs(_rmat.m_arrfMatrix[r][szPivotCol]) >= 0.000001f)
+			{
+				bEntriesAbove = true;
+				break;
+			}
+		}
+
+		// Check that there are no entries below pivot
+		bool bEntriesBelow = false;
+		for (size_t r = szPivotRow + 1; r < szRows; ++r)
+		{
+			if (abs(_rmat.m_arrfMatrix[r][szPivotCol]) >= 0.000001f)
+			{
+				bEntriesBelow = true;
+				break;
+			}
+		}
+
+		if (!bPivotsAreNormalized || bEntriesAbove || bEntriesBelow)
+		{
+			return false;
+		}
+
+		++szPivotRow;
+		++szPivotCol;
+	}
+}
+
+template<size_t szRows, size_t szCols>
+inline bool CMatrix<szRows, szCols>::IsInEchelonForm(const CMatrix<szRows, szCols>& _rmat)
+{
+	size_t szPivotRow = 0;
+	size_t szPivotCol = 0;
+
+	while ((szPivotRow < szRows) && (szPivotCol < szCols))
+	{
+		// Find pivot row in this column
+		for (size_t szCurRow = szPivotRow; szCurRow < szRows; ++szCurRow)
+		{
+			if (_rmat.m_arrfMatrix[szCurRow][szPivotCol] != 0)
+			{
+				szPivotRow = szCurRow;
+				break;
+			}
+		}
+
+		// Move to next column if column contains no pivot
+		if (_rmat.m_arrfMatrix[szPivotRow][szPivotCol] == 0)
+		{
+			++szPivotCol;
+			continue;
+		}
+
+		// Check that there are no entries below pivot
+		bool bEntriesBelow = false;
+		for (size_t r = szPivotRow + 1; r < szRows; ++r)
+		{
+			if (abs(_rmat.m_arrfMatrix[r][szPivotCol]) >= 0.000001f)
+			{
+				bEntriesBelow = true;
+				break;
+			}
+		}
+
+		if (bEntriesBelow)
+		{
+			return false;
+		}
+
+		++szPivotRow;
+		++szPivotCol;
 	}
 }
 

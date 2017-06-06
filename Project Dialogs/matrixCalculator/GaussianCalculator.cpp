@@ -74,12 +74,21 @@ void CGaussianCalculator::HandleBtnApplyAddMultipleOfRowToRow(HWND _hDlg)
 	}
 }
 
-void CGaussianCalculator::HandleBtnRowEchelon(HWND _hDlg)
+void CGaussianCalculator::HandleBtnGaussianElimStep(HWND _hDlg)
 {
  	CMatrix<3, 4> matResult = GetMatrix(_hDlg);
-	CMatrix<3, 4>::RowEchleonFormStep(matResult, m_szCurPivotRow, m_szCurPivotCol, m_iCurEliminationDir);
+	int iEliminationDirection = CMatrix<3, 4>::GaussianElimStep(matResult);
 
 	SetMatrixBoxes(_hDlg, matResult);
+
+	if (CMatrix<3, 4>::IsInReducedRowEchelonForm(matResult))
+	{
+		MessageBoxA(_hDlg, "The matrix is now in reduced row echelon form", "Matrix Form", MB_OK | MB_ICONINFORMATION);
+	}
+	else if (CMatrix<3, 4>::IsInEchelonForm(matResult) && iEliminationDirection == 1)
+	{
+		MessageBoxA(_hDlg, "The matrix is now in echelon form", "Matrix Form", MB_OK | MB_ICONINFORMATION);
+	}
 }
 
 CMatrix<3, 4> CGaussianCalculator::GetMatrix(HWND _hDlg)

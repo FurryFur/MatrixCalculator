@@ -362,7 +362,7 @@ BOOL CALLBACK GaussianDlgProc(HWND _hwnd,
 		}
 		case IDC_BTNSOLVERE:
 		{
-			s_gaussianCalculator.HandleBtnRowEchelon(_hwnd);
+			s_gaussianCalculator.HandleBtnGaussianElimStep(_hwnd);
 			break;
 		}
 		default:
