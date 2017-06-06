@@ -3,7 +3,7 @@
 #include "utils.h"
 
 
-CQuaternionCalculator::CQuaternionCalculator() :
+CQuaternionCalculator::CQuaternionCalculator(HWND _hDlg) :
 	m_karrQuatABoxes{
 		IDC_EDIT4,     // The real component is placed in the last edit box
 		IDC_EDIT1,
@@ -24,6 +24,7 @@ CQuaternionCalculator::CQuaternionCalculator() :
 	},
 	m_kszScalarTBox(IDC_EDIT9)
 {
+	m_hDlg = _hDlg;
 }
 
 
@@ -31,122 +32,122 @@ CQuaternionCalculator::~CQuaternionCalculator()
 {
 }
 
-void CQuaternionCalculator::HandleBtnAPlusB(HWND _hDlg)
+void CQuaternionCalculator::HandleBtnAPlusB()
 {
-	CQuaternion qA = GetQuaternionA(_hDlg);
-	CQuaternion qB = GetQuaternionB(_hDlg);
-	SetAnswerBox(_hDlg, qA + qB);
+	CQuaternion qA = GetQuaternionA();
+	CQuaternion qB = GetQuaternionB();
+	SetAnswerBox(qA + qB);
 }
 
-void CQuaternionCalculator::HandleBtnAMinusB(HWND _hDlg)
+void CQuaternionCalculator::HandleBtnAMinusB()
 {
-	CQuaternion qA = GetQuaternionA(_hDlg);
-	CQuaternion qB = GetQuaternionB(_hDlg);
-	SetAnswerBox(_hDlg, qA - qB);
+	CQuaternion qA = GetQuaternionA();
+	CQuaternion qB = GetQuaternionB();
+	SetAnswerBox(qA - qB);
 }
 
-void CQuaternionCalculator::HandleBtnBMinusA(HWND _hDlg)
+void CQuaternionCalculator::HandleBtnBMinusA()
 {
-	CQuaternion qA = GetQuaternionA(_hDlg);
-	CQuaternion qB = GetQuaternionB(_hDlg);
-	SetAnswerBox(_hDlg, qB - qA);
+	CQuaternion qA = GetQuaternionA();
+	CQuaternion qB = GetQuaternionB();
+	SetAnswerBox(qB - qA);
 }
 
-void CQuaternionCalculator::HandleBtnATimesB(HWND _hDlg)
+void CQuaternionCalculator::HandleBtnATimesB()
 {
-	CQuaternion qA = GetQuaternionA(_hDlg);
-	CQuaternion qB = GetQuaternionB(_hDlg);
-	SetAnswerBox(_hDlg, qA * qB);
+	CQuaternion qA = GetQuaternionA();
+	CQuaternion qB = GetQuaternionB();
+	SetAnswerBox(qA * qB);
 }
 
-void CQuaternionCalculator::HandleBtnBTimesA(HWND _hDlg)
+void CQuaternionCalculator::HandleBtnBTimesA()
 {
-	CQuaternion qA = GetQuaternionA(_hDlg);
-	CQuaternion qB = GetQuaternionB(_hDlg);
-	SetAnswerBox(_hDlg, qB * qA);
+	CQuaternion qA = GetQuaternionA();
+	CQuaternion qB = GetQuaternionB();
+	SetAnswerBox(qB * qA);
 }
 
-void CQuaternionCalculator::HandleBtnADotB(HWND _hDlg)
+void CQuaternionCalculator::HandleBtnADotB()
 {
-	CQuaternion qA = GetQuaternionA(_hDlg);
-	CQuaternion qB = GetQuaternionB(_hDlg);
-	SetAnswerBox(_hDlg, qA.Dot(qB));
+	CQuaternion qA = GetQuaternionA();
+	CQuaternion qB = GetQuaternionB();
+	SetAnswerBox(qA.Dot(qB));
 }
 
-void CQuaternionCalculator::HandleBtnAConjugate(HWND _hDlg)
+void CQuaternionCalculator::HandleBtnAConjugate()
 {
-	CQuaternion qA = GetQuaternionA(_hDlg);
-	SetAnswerBox(_hDlg, qA.Conjugate());
+	CQuaternion qA = GetQuaternionA();
+	SetAnswerBox(qA.Conjugate());
 }
 
-void CQuaternionCalculator::HandleBtnBConjugate(HWND _hDlg)
+void CQuaternionCalculator::HandleBtnBConjugate()
 {
-	CQuaternion qB = GetQuaternionB(_hDlg);
-	SetAnswerBox(_hDlg, qB.Conjugate());
+	CQuaternion qB = GetQuaternionB();
+	SetAnswerBox(qB.Conjugate());
 }
 
-void CQuaternionCalculator::HandleBtnMagnitudeOfA(HWND _hDlg)
+void CQuaternionCalculator::HandleBtnMagnitudeOfA()
 {
-	CQuaternion qA = GetQuaternionA(_hDlg);
-	SetAnswerBox(_hDlg, qA.Magnitude());
+	CQuaternion qA = GetQuaternionA();
+	SetAnswerBox(qA.Magnitude());
 }
 
-void CQuaternionCalculator::HandleBtnMagnitudeOfB(HWND _hDlg)
+void CQuaternionCalculator::HandleBtnMagnitudeOfB()
 {
-	CQuaternion qB = GetQuaternionB(_hDlg);
-	SetAnswerBox(_hDlg, qB.Magnitude());
+	CQuaternion qB = GetQuaternionB();
+	SetAnswerBox(qB.Magnitude());
 }
 
-void CQuaternionCalculator::HandleBtnAInverse(HWND _hDlg)
+void CQuaternionCalculator::HandleBtnAInverse()
 {
-	CQuaternion qA = GetQuaternionA(_hDlg);
-	SetAnswerBox(_hDlg, qA.Inverse());
+	CQuaternion qA = GetQuaternionA();
+	SetAnswerBox(qA.Inverse());
 }
 
-void CQuaternionCalculator::HandleBtnBInverse(HWND _hDlg)
+void CQuaternionCalculator::HandleBtnBInverse()
 {
-	CQuaternion qB = GetQuaternionB(_hDlg);
-	SetAnswerBox(_hDlg, qB.Inverse());
+	CQuaternion qB = GetQuaternionB();
+	SetAnswerBox(qB.Inverse());
 }
 
-void CQuaternionCalculator::HandleBtnTTimesA(HWND _hDlg)
+void CQuaternionCalculator::HandleBtnTTimesA()
 {
-	CQuaternion qA = GetQuaternionA(_hDlg);
-	float fT = ReadFromEditBox(_hDlg, m_kszScalarTBox);
-	SetAnswerBox(_hDlg, fT * qA);
+	CQuaternion qA = GetQuaternionA();
+	float fT = ReadFromEditBox(m_hDlg, m_kszScalarTBox);
+	SetAnswerBox(fT * qA);
 }
 
-void CQuaternionCalculator::HandleBtnTTimesB(HWND _hDlg)
+void CQuaternionCalculator::HandleBtnTTimesB()
 {
-	CQuaternion qB = GetQuaternionB(_hDlg);
-	float fT = ReadFromEditBox(_hDlg, m_kszScalarTBox);
-	SetAnswerBox(_hDlg, fT * qB);
+	CQuaternion qB = GetQuaternionB();
+	float fT = ReadFromEditBox(m_hDlg, m_kszScalarTBox);
+	SetAnswerBox(fT * qB);
 }
 
-CQuaternion CQuaternionCalculator::GetQuaternionA(HWND _hDlg)
+CQuaternion CQuaternionCalculator::GetQuaternionA()
 {
-	float fW = ReadFromEditBox(_hDlg, m_karrQuatABoxes[0]);
-	float fI = ReadFromEditBox(_hDlg, m_karrQuatABoxes[1]);
-	float fJ = ReadFromEditBox(_hDlg, m_karrQuatABoxes[2]);
-	float fK = ReadFromEditBox(_hDlg, m_karrQuatABoxes[3]);
+	float fW = ReadFromEditBox(m_hDlg, m_karrQuatABoxes[0]);
+	float fI = ReadFromEditBox(m_hDlg, m_karrQuatABoxes[1]);
+	float fJ = ReadFromEditBox(m_hDlg, m_karrQuatABoxes[2]);
+	float fK = ReadFromEditBox(m_hDlg, m_karrQuatABoxes[3]);
 	return CQuaternion(fW, fI, fJ, fK);
 }
 
-CQuaternion CQuaternionCalculator::GetQuaternionB(HWND _hDlg)
+CQuaternion CQuaternionCalculator::GetQuaternionB()
 {
-	float fW = ReadFromEditBox(_hDlg, m_karrQuatBBoxes[0]);
-	float fI = ReadFromEditBox(_hDlg, m_karrQuatBBoxes[1]);
-	float fJ = ReadFromEditBox(_hDlg, m_karrQuatBBoxes[2]);
-	float fK = ReadFromEditBox(_hDlg, m_karrQuatBBoxes[3]);
+	float fW = ReadFromEditBox(m_hDlg, m_karrQuatBBoxes[0]);
+	float fI = ReadFromEditBox(m_hDlg, m_karrQuatBBoxes[1]);
+	float fJ = ReadFromEditBox(m_hDlg, m_karrQuatBBoxes[2]);
+	float fK = ReadFromEditBox(m_hDlg, m_karrQuatBBoxes[3]);
 	return CQuaternion(fW, fI, fJ, fK);
 }
 
-void CQuaternionCalculator::SetAnswerBox(HWND _hDlg, const CQuaternion& _krqAnswer)
+void CQuaternionCalculator::SetAnswerBox(const CQuaternion& _krqAnswer)
 {
 	for (size_t szIdx = 0; szIdx < 4; ++szIdx)
 	{
 		float fElement = _krqAnswer.GetElement(szIdx);
-		WriteToEditBox(_hDlg, m_karrQuatAnsBoxes.at(szIdx), fElement);
+		WriteToEditBox(m_hDlg, m_karrQuatAnsBoxes.at(szIdx), fElement);
 	}
 }
 

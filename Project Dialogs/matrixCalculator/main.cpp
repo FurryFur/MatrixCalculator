@@ -390,7 +390,7 @@ BOOL CALLBACK QuaternionDlgProc(HWND _hwnd,
 	WPARAM _wparam,
 	LPARAM _lparam)
 {
-	static CQuaternionCalculator s_quaternionCalculator;
+	static CQuaternionCalculator s_quaternionCalculator(_hwnd);
 
 	switch (_msg)
 	{
@@ -400,72 +400,72 @@ BOOL CALLBACK QuaternionDlgProc(HWND _hwnd,
 		{
 		case IDC_BUTTON1:
 		{
-			s_quaternionCalculator.HandleBtnAPlusB(_hwnd);
+			s_quaternionCalculator.HandleBtnAPlusB();
 			break;
 		}
 		case IDC_BUTTON5:
 		{
-			s_quaternionCalculator.HandleBtnAMinusB(_hwnd);
+			s_quaternionCalculator.HandleBtnAMinusB();
 			break;
 		}
 		case IDC_BUTTON6:
 		{
-			s_quaternionCalculator.HandleBtnBMinusA(_hwnd);
+			s_quaternionCalculator.HandleBtnBMinusA();
 			break;
 		}
 		case IDC_BUTTON2:
 		{
-			s_quaternionCalculator.HandleBtnATimesB(_hwnd);
+			s_quaternionCalculator.HandleBtnATimesB();
 			break;
 		}
 		case IDC_BUTTON7:
 		{
-			s_quaternionCalculator.HandleBtnBTimesA(_hwnd);
+			s_quaternionCalculator.HandleBtnBTimesA();
 			break;
 		}
 		case IDC_BUTTON8:
 		{
-			s_quaternionCalculator.HandleBtnADotB(_hwnd);
+			s_quaternionCalculator.HandleBtnADotB();
 			break;
 		}
 		case IDC_BUTTON3:
 		{
-			s_quaternionCalculator.HandleBtnAConjugate(_hwnd);
+			s_quaternionCalculator.HandleBtnAConjugate();
 			break;
 		}
 		case IDC_BUTTON9:
 		{
-			s_quaternionCalculator.HandleBtnBConjugate(_hwnd);
+			s_quaternionCalculator.HandleBtnBConjugate();
 			break;
 		}
 		case IDC_BUTTON10:
 		{
-			s_quaternionCalculator.HandleBtnMagnitudeOfA(_hwnd);
+			s_quaternionCalculator.HandleBtnMagnitudeOfA();
 			break;
 		}
 		case IDC_BUTTON11:
 		{
-			s_quaternionCalculator.HandleBtnMagnitudeOfB(_hwnd);
+			s_quaternionCalculator.HandleBtnMagnitudeOfB();
 			break;
 		}
 		case IDC_BUTTON12:
 		{
-			s_quaternionCalculator.HandleBtnAInverse(_hwnd);
+			s_quaternionCalculator.HandleBtnAInverse();
 			break;
 		}
 		case IDC_BUTTON13:
 		{
-			s_quaternionCalculator.HandleBtnBInverse(_hwnd);
+			s_quaternionCalculator.HandleBtnBInverse();
 			break;
 		}
 		case IDC_BUTTON14:
 		{
-			s_quaternionCalculator.HandleBtnTTimesA(_hwnd);
+			s_quaternionCalculator.HandleBtnTTimesA();
 			break;
 		}
 		case IDC_BUTTON15:
 		{
-			s_quaternionCalculator.HandleBtnTTimesB(_hwnd);
+			s_quaternionCalculator.HandleBtnTTimesB();
 			break;
 		}
 		default:
@@ -492,7 +492,7 @@ BOOL CALLBACK SLERPDlgProc(HWND _hwnd,
 	WPARAM _wparam,
 	LPARAM _lparam)
 {
-	static CSlerpCalculator s_slerpCalculator;
+	static CSlerpCalculator s_slerpCalculator(_hwnd);
 
 	switch (_msg)
 	{
@@ -502,7 +502,22 @@ BOOL CALLBACK SLERPDlgProc(HWND _hwnd,
 		{
 		case IDC_BUTTON1:
 		{
-			s_slerpCalculator.HandleBtnASlerpB(_hwnd);
+			s_slerpCalculator.HandleBtnASlerpB();
+			break;
+		}
+		case IDC_BUTTON2:
+		{
+			s_slerpCalculator.ConvertToMatrix(s_slerpCalculator.GetAQuaternion());
+			break;
+		}
+		case IDC_BUTTON3:
+		{
+			s_slerpCalculator.ConvertToMatrix(s_slerpCalculator.GetBQuaternion());
+			break;
+		}
+		case IDC_BUTTON4:
+		{
+			s_slerpCalculator.ConvertToMatrix(s_slerpCalculator.GetRQuaternion());
 			break;
 		}
 		default:

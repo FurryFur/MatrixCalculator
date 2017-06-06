@@ -25,21 +25,31 @@
 class CSlerpCalculator
 {
 public:
-	CSlerpCalculator();
+	CSlerpCalculator(HWND _hDlg);
 	~CSlerpCalculator();
 
-	void  HandleBtnASlerpB(HWND _hDlg);
+	void  HandleBtnASlerpB();
+
+	std::array<size_t, 4> GetAQuaternion();
+	std::array<size_t, 4> GetBQuaternion();
+	std::array<size_t, 4> GetRQuaternion();
+
+	void ConvertToMatrix(const std::array<size_t, 4> _karrQuatBoxes);
 
 private:
-	CQuaternion GetQuaternionA(HWND _hDlg);
-	CQuaternion GetQuaternionB(HWND _hDlg);
+	CQuaternion GetQuaternionA();
+	CQuaternion GetQuaternionB();
 
-	void SetAnswerBox(HWND _hDlg, const CQuaternion& _krqAnswer);
+	void SetAnswerBox(const CQuaternion& _krqAnswer);
 
 	const std::array<size_t, 4> m_karrQuatABoxes;
 	const std::array<size_t, 4> m_karrQuatBBoxes;
 	const std::array<size_t, 4> m_karrQuatAnsBoxes;
 	const size_t                m_kszScalarTBox;
+
+	HWND m_hDlg;
+
+	size_t m_aRMatrixBoxes[4][4];
 };
 
 #endif // SLERP_CALCULATOR_H
