@@ -24,6 +24,7 @@ public:
 	CQuaternion operator*(float  _fScaler) const;
 	CQuaternion operator+(const CQuaternion& _kqRHS) const;
 	CQuaternion operator-(const CQuaternion& _kqRHS) const;
+	CQuaternion operator-() const;
 	float Dot(const CQuaternion& _kqRHS) const;
 	CQuaternion Conjugate() const;
 	float Magnitude() const;

@@ -68,7 +68,21 @@ void CSlerpCalculator::HandleBtnASlerpB() {
 	CQuaternion qA = GetQuaternionA();
 	CQuaternion qB = GetQuaternionB();
 	float _fAngle = acosf((qA.Dot(qB)) / (qA.Magnitude() * qB.Magnitude()));
-	SetAnswerBox(((((sinf((1 - m_kszScalarTBox) * _fAngle)) / (sinf(_fAngle))) * qA) + (((sinf(m_kszScalarTBox * _fAngle)) / (sinf(_fAngle))) * qB)));
+	//checks to see if the angle is negative. if so makes it positive.
+	if (_fAngle < 0)
+	{
+		_fAngle = acosf((qA.Dot((-qB))) / (qA.Magnitude() * (-qB).Magnitude()));
+	}
+	//will perform a SLERP if the angle is not tiny
+	if(_fAngle > 0.01)
+	{
+		SetAnswerBox(((((sinf((1 - m_kszScalarTBox) * _fAngle)) / (sinf(_fAngle))) * qA) + (((sinf(m_kszScalarTBox * _fAngle)) / (sinf(_fAngle))) * qB)));
+	}
+	//otherwise it will perform a LERP
+	else
+	{
+		SetAnswerBox(((1 - m_kszScalarTBox) * qA) + (m_kszScalarTBox * qB));
+	}
 }
 
 CQuaternion CSlerpCalculator::GetQuaternionA()

@@ -100,6 +100,16 @@ CQuaternion CQuaternion::operator-(const CQuaternion & _kqRHS) const
 	return qResult;
 }
 
+CQuaternion  CQuaternion::operator-() const
+{
+	CQuaternion qResult;
+	for (size_t szIdx = 0; szIdx < 4; ++szIdx)
+	{
+		qResult.SetElement(szIdx, -(this->GetElement(szIdx)));
+	}
+	return qResult;
+}
+
 float CQuaternion::Dot(const CQuaternion & _kqRHS) const
 {
 	float fResult = 0;
