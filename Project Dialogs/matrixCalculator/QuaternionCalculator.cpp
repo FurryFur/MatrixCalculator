@@ -89,13 +89,15 @@ void CQuaternionCalculator::HandleBtnBConjugate()
 void CQuaternionCalculator::HandleBtnMagnitudeOfA()
 {
 	CQuaternion qA = GetQuaternionA();
-	SetAnswerBox(qA.Magnitude());
+	float qAMag = sqrt(pow(qA.GetW(), 2) + pow(qA.GetI(), 2) + pow(qA.GetJ(), 2) + pow(qA.GetK(), 2));
+	SetAnswerBox(qAMag);
 }
 
 void CQuaternionCalculator::HandleBtnMagnitudeOfB()
 {
 	CQuaternion qB = GetQuaternionB();
-	SetAnswerBox(qB.Magnitude());
+	float qBMag = sqrt(pow(qB.GetW(), 2) + pow(qB.GetI(), 2) + pow(qB.GetJ(), 2) + pow(qB.GetK(), 2));
+	SetAnswerBox(qBMag);
 }
 
 void CQuaternionCalculator::HandleBtnAInverse()

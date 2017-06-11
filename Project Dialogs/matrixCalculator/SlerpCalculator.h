@@ -34,12 +34,16 @@ public:
 	std::array<size_t, 4> GetBQuaternion();
 	std::array<size_t, 4> GetRQuaternion();
 
-	void ConvertToMatrix(const std::array<size_t, 4> _karrQuatBoxes);
+	void ConvertAToMatrix();
+	void ConvertBToMatrix();
+	void ConvertRToMatrix();
 
 private:
 	CQuaternion GetQuaternionA();
 	CQuaternion GetQuaternionB();
+	CQuaternion GetQuaternionR();
 
+	void ConvertToMatrix(const CQuaternion& _krqQuat);
 	void SetAnswerBox(const CQuaternion& _krqAnswer);
 
 	const std::array<size_t, 4> m_karrQuatABoxes;

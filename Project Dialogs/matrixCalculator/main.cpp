@@ -507,17 +507,17 @@ BOOL CALLBACK SLERPDlgProc(HWND _hwnd,
 		}
 		case IDC_BUTTON2:
 		{
-			s_slerpCalculator.ConvertToMatrix(s_slerpCalculator.GetAQuaternion());
+			s_slerpCalculator.ConvertAToMatrix();
 			break;
 		}
 		case IDC_BUTTON3:
 		{
-			s_slerpCalculator.ConvertToMatrix(s_slerpCalculator.GetBQuaternion());
+			s_slerpCalculator.ConvertBToMatrix();
 			break;
 		}
 		case IDC_BUTTON4:
 		{
-			s_slerpCalculator.ConvertToMatrix(s_slerpCalculator.GetRQuaternion());
+			s_slerpCalculator.ConvertRToMatrix();
 			break;
 		}
 		default:
