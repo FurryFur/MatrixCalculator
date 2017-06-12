@@ -171,15 +171,15 @@ void CTransformationCalculator::RotationTransformation(HWND _hDlg, const float& 
 		CMatrix4 rotationMatrix;
 
 		rotationMatrix.SetElement(0, 0, (powf(_fnX, 2.0f) * (1 - cosf(_fAngle)) + cosf(_fAngle)));
-		rotationMatrix.SetElement(0, 1, (_fnX * _fnY * (1 - cosf(_fAngle)) + _fnZ * sinf(_fAngle)));
-		rotationMatrix.SetElement(0, 2, (_fnX * _fnZ * (1 - cosf(_fAngle)) - _fnY * sinf(_fAngle)));
+		rotationMatrix.SetElement(0, 1, (_fnX * _fnY * (1 - cosf(_fAngle)) - _fnZ * sinf(_fAngle)));
+		rotationMatrix.SetElement(0, 2, (_fnX * _fnZ * (1 - cosf(_fAngle)) + _fnY * sinf(_fAngle)));
 
-		rotationMatrix.SetElement(1, 0, (_fnX * _fnY * (1 - cosf(_fAngle)) - _fnZ * sinf(_fAngle)));
+		rotationMatrix.SetElement(1, 0, (_fnX * _fnY * (1 - cosf(_fAngle)) + _fnZ * sinf(_fAngle)));
 		rotationMatrix.SetElement(1, 1, (powf(_fnY, 2.0f) * (1 - cosf(_fAngle)) + cosf(_fAngle)));
-		rotationMatrix.SetElement(1, 2, (_fnY * _fnZ * (1 - cosf(_fAngle)) + _fnX * sinf(_fAngle)));
+		rotationMatrix.SetElement(1, 2, (_fnY * _fnZ * (1 - cosf(_fAngle)) - _fnX * sinf(_fAngle)));
 
-		rotationMatrix.SetElement(2, 0, (_fnX * _fnZ * (1 - cosf(_fAngle)) + _fnY * sinf(_fAngle)));
-		rotationMatrix.SetElement(2, 1, (_fnY * _fnZ * (1 - cosf(_fAngle)) - _fnX * sinf(_fAngle)));
+		rotationMatrix.SetElement(2, 0, (_fnX * _fnZ * (1 - cosf(_fAngle)) - _fnY * sinf(_fAngle)));
+		rotationMatrix.SetElement(2, 1, (_fnY * _fnZ * (1 - cosf(_fAngle)) + _fnX * sinf(_fAngle)));
 		rotationMatrix.SetElement(2, 2, (powf(_fnZ, 2.0f) * (1 - cos(_fAngle)) + cosf(_fAngle)));
 
 		rotationMatrix.SetElement(0, 3, 0);
