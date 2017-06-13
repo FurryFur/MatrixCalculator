@@ -6,8 +6,8 @@
 //
 // (c) 2016 Media Design School
 //
-// File Name	: main.cpp
-// Description	: controls all buttons and which calulator is shown
+// File Name	: 
+// Description	: 
 // Author		: Jack Mair : Lance Chaney
 // Mail			: jack.mair@mediadesign.school.nz : lance.chaney@mediadesign.school.nz
 //

@@ -1,16 +1,3 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2017 Media Design School
-//
-// File Name	: QuaternionCalulator.h
-// Description	: Header for quaternion calculator
-// Author		: Jack Mair : Lance Chaney
-// Mail			: jack.mair@mediadesign.school.nz : lance.chaney@mediadesign.school.nz
-//
 #pragma once
 
 #ifndef QUATERNION_CALCULATOR_H

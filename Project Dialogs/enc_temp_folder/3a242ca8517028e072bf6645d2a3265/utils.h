@@ -6,8 +6,8 @@
 //
 // (c) 2016 Media Design School
 //
-// File Name	: utlis.h
-// Description	: header for utilities
+// File Name	: 
+// Description	: 
 // Author		: Jack Mair : Lance Chaney
 // Mail			: jack.mair@mediadesign.school.nz : lance.chaney@mediadesign.school.nz
 //

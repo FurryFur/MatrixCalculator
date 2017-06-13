@@ -1,16 +1,3 @@
-//
-// Bachelor of Software Engineering
-// Media Design School
-// Auckland
-// New Zealand
-//
-// (c) 2017 Media Design School
-//
-// File Name	: GaussianCalculator.cpp
-// Description	: Function for Gaussian Calculator
-// Author		: Jack Mair : Lance Chaney
-// Mail			: jack.mair@mediadesign.school.nz : lance.chaney@mediadesign.school.nz
-//
 #include "GaussianCalculator.h"
 #include "resource.h"
 #include "utils.h"
